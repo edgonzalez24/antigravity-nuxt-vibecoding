@@ -45,16 +45,6 @@ We follow a strict, minimalist, and premium design system:
 Make sure to install the dependencies:
 
 ```bash
-# npm
-npm install
-
-# pnpm
-pnpm install
-
-# yarn
-yarn install
-
-# bun
 bun install
 ```
 
@@ -63,8 +53,7 @@ bun install
 Start the development server on `http://localhost:3000`:
 
 ```bash
-npm run dev
-# or pnpm dev / yarn dev / bun dev
+bun run dev
 ```
 
 ### Production
@@ -72,13 +61,13 @@ npm run dev
 Build the application for production:
 
 ```bash
-npm run build
+bun run build
 ```
 
 Locally preview the production build:
 
 ```bash
-npm run preview
+bun run preview
 ```
 
 ---

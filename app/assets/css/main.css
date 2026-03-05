@@ -1,0 +1,26 @@
+@import "tailwindcss";
+
+/* 
+  # Color Palette (use these exact values)
+  - Nordic — #19322F (Main Dark Color)
+  - Mosque — #006655 (Primary Action Color)
+  - Touch of Green — #D9ECC8 (Soft Background / Featured Cards)
+  - Clear Day — #EEF6F6 (General Application Background)
+*/
+
+@theme {
+  --color-nordic: #19322F;
+  --color-mosque: #006655;
+  --color-touch-of-green: #D9ECC8;
+  --color-clear-day: #EEF6F6;
+
+  --font-sans: "SF Pro Display", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    background-color: var(--color-clear-day);
+    color: var(--color-nordic);
+  }
+}
