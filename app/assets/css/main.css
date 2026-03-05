@@ -8,19 +8,36 @@
   - Clear Day — #EEF6F6 (General Application Background)
 */
 
+@import "tailwindcss";
+
 @theme {
-  --color-nordic: #19322F;
+  --color-nordic-dark: #19322F;
   --color-mosque: #006655;
   --color-touch-of-green: #D9ECC8;
   --color-clear-day: #EEF6F6;
+  --color-background-light: #EEF6F6;
 
-  --font-sans: "SF Pro Display", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-sans: "SF Pro Display", "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-display: "SF Pro Display", "Inter", sans-serif;
+
+  --shadow-soft: 0 10px 40px -10px rgba(0,0,0,0.05);
+  --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
 }
 
 @layer base {
   html {
     font-family: var(--font-sans);
-    background-color: var(--color-clear-day);
-    color: var(--color-nordic);
+    background-color: var(--color-background-light);
+    color: var(--color-nordic-dark);
+  }
+}
+
+@layer utilities {
+  .hide-scroll::-webkit-scrollbar {
+    display: none;
+  }
+  .hide-scroll {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 }

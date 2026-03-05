@@ -12,6 +12,9 @@ This application is built using a **"full vibe coding"** approach. Vibe coding i
 
 The development is driven by **[Antigravity](https://antigravity.google/)** — a powerful, advanced agentic AI coding assistant designed by the Google DeepMind team. Antigravity acts as an autonomous pair programmer, capable of implementing features, refactoring, and managing the project directly within the IDE based on the provided guidelines (`instructions.md` and `guidelines.md`).
 
+![Preview](screenshots/preview-workflow-antigravity.png)
+
+
 > **Initial Template:** This project used **[Google Stitch](https://stitch.withgoogle.com/)** to generate its initial scaffolding. 
 > There are also other viable alternatives for UI/project generation such as: **[v0 by Vercel](https://v0.dev/)**, **[Lovable](https://lovable.dev/)**, and **[Bolt AI Builder](https://bolt.new/)**.
 
