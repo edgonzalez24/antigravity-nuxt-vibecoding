@@ -1,13 +1,23 @@
 export interface Property {
   id: string
   title: string
+  slug: string
   location: string
   price: number
   price_suffix?: string | null
   beds: number
   baths: number | string
   area: number
-  image: string
+  images?: string[]
+  description?: string
+  amenities?: string[]
+  agent?: {
+    name: string
+    avatar: string
+    title: string
+    phone: string
+    email: string
+  }
   tags: string[]
   type: 'sale' | 'rent'
   featured?: boolean

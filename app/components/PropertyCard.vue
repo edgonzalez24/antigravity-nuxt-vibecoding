@@ -1,8 +1,8 @@
 <template>
-  <article
-    class="bg-white rounded-xl overflow-hidden shadow-card hover:shadow-soft transition-all duration-300 group cursor-pointer h-full flex flex-col">
+  <NuxtLink :to="`/properties/${property.slug}`"
+    class="bg-white rounded-xl overflow-hidden shadow-card hover:shadow-soft transition-all duration-300 group cursor-pointer h-full flex flex-col block">
     <div class="relative aspect-[4/3] overflow-hidden">
-      <NuxtImg :src="property.image" :alt="property.title"
+      <NuxtImg :src="property.images?.[0] || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9'" :alt="property.title"
         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy" />
       <button
         class="absolute top-3 right-3 p-2 bg-white/90 rounded-full hover:bg-mosque hover:text-white transition-colors text-nordic-dark">
@@ -37,7 +37,7 @@
         </div>
       </div>
     </div>
-  </article>
+  </NuxtLink>
 </template>
 
 <script setup lang="ts">

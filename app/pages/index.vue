@@ -82,7 +82,7 @@
         <div v-for="property in featuredProperties" :key="property.id"
           class="group relative rounded-xl overflow-hidden shadow-soft bg-white cursor-pointer">
           <div class="aspect-[4/3] w-full overflow-hidden relative">
-            <NuxtImg :src="property.image" :alt="property.title"
+            <NuxtImg :src="property.images?.[0] || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9'" :alt="property.title"
               class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               loading="lazy" />
             <div v-if="property.tags && property.tags.length"
