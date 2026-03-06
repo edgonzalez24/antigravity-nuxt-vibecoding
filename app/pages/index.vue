@@ -67,7 +67,18 @@
         </a>
       </div>
 
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <!-- Loading state -->
+      <div v-if="featuredPending" class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div v-for="i in 4" :key="i" class="rounded-xl overflow-hidden bg-white shadow-soft animate-pulse">
+          <div class="aspect-[4/3] bg-gray-200"></div>
+          <div class="p-6 space-y-3">
+            <div class="h-5 bg-gray-200 rounded w-3/4"></div>
+            <div class="h-4 bg-gray-100 rounded w-1/2"></div>
+          </div>
+        </div>
+      </div>
+
+      <div v-else class="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div v-for="property in featuredProperties" :key="property.id"
           class="group relative rounded-xl overflow-hidden shadow-soft bg-white cursor-pointer">
           <div class="aspect-[4/3] w-full overflow-hidden relative">
@@ -96,7 +107,7 @@
                 </p>
               </div>
               <span class="text-xl font-semibold text-mosque">{{ formatPrice(property.price) }}<span
-                  v-if="property.priceSuffix" class="text-sm font-normal">{{ property.priceSuffix }}</span></span>
+                  v-if="property.price_suffix" class="text-sm font-normal">{{ property.price_suffix }}</span></span>
             </div>
 
             <div class="flex items-center gap-6 mt-6 pt-6 border-t border-nordic-dark/5">
@@ -131,20 +142,75 @@
         </div>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <!-- Loading skeleton -->
+      <div v-if="propertiesPending" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div v-for="i in PAGE_LIMIT" :key="i" class="rounded-xl bg-white shadow-card animate-pulse">
+          <div class="aspect-[4/3] bg-gray-200 rounded-t-xl"></div>
+          <div class="p-4 space-y-2">
+            <div class="h-4 bg-gray-200 rounded w-3/4"></div>
+            <div class="h-3 bg-gray-100 rounded w-1/2"></div>
+          </div>
+        </div>
+      </div>
+
+      <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         <PropertyCard v-for="prop in newProperties" :key="prop.id" :property="prop" />
       </div>
 
-      <div class="mt-12 text-center">
-        <button
-          class="px-8 py-3 bg-white border border-nordic-dark/10 hover:border-mosque hover:text-mosque text-nordic-dark font-medium rounded-lg transition-all hover:shadow-md">
-          Load more properties
+      <!-- Pagination -->
+      <div class="mt-12 flex items-center justify-center gap-4">
+        <button :disabled="currentPage <= 1" @click="currentPage--"
+          class="flex items-center gap-2 px-5 py-2.5 bg-white border border-nordic-dark/10 rounded-lg text-nordic-dark font-medium text-sm transition-all hover:border-mosque hover:text-mosque disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:border-nordic-dark/10 disabled:hover:text-nordic-dark">
+          <span class="material-icons text-base">arrow_back</span>
+          Previous
+        </button>
+
+        <div class="flex items-center gap-2">
+          <span class="text-sm text-nordic-dark/60">Page</span>
+          <span class="text-sm font-semibold text-nordic-dark">{{ currentPage }}</span>
+          <span class="text-sm text-nordic-dark/60">of</span>
+          <span class="text-sm font-semibold text-nordic-dark">{{ totalPages }}</span>
+        </div>
+
+        <button :disabled="currentPage >= totalPages" @click="currentPage++"
+          class="flex items-center gap-2 px-5 py-2.5 bg-white border border-nordic-dark/10 rounded-lg text-nordic-dark font-medium text-sm transition-all hover:border-mosque hover:text-mosque disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:border-nordic-dark/10 disabled:hover:text-nordic-dark">
+          Next
+          <span class="material-icons text-base">arrow_forward</span>
         </button>
       </div>
+
+      <!-- Result count -->
+      <p v-if="totalProperties > 0" class="text-center text-sm text-nordic-dark/40 mt-4">
+        Showing {{ (currentPage - 1) * PAGE_LIMIT + 1 }}–{{ Math.min(currentPage * PAGE_LIMIT, totalProperties) }} of {{
+        totalProperties }} properties
+      </p>
     </section>
   </main>
 </template>
 
 <script setup lang="ts">
-const { featuredProperties, newProperties, formatPrice } = useProperties()
+const { formatPrice } = useProperties()
+
+const PAGE_LIMIT = 8
+
+// --- Featured Properties (non-paginated) ---
+const { data: featuredData, pending: featuredPending } = await useAsyncData(
+  'featured-properties',
+  () => $fetch('/api/properties', { query: { featured: 'true', limit: 10 } })
+)
+
+const featuredProperties = computed(() => (featuredData.value as any)?.data ?? [])
+
+// --- New in Market (paginated) ---
+const currentPage = ref(1)
+
+const { data: propertiesData, pending: propertiesPending } = await useAsyncData(
+  'new-properties',
+  () => $fetch('/api/properties', { query: { featured: 'false', page: currentPage.value, limit: PAGE_LIMIT } }),
+  { watch: [currentPage] }
+)
+
+const newProperties = computed(() => (propertiesData.value as any)?.data ?? [])
+const totalProperties = computed(() => (propertiesData.value as any)?.total ?? 0)
+const totalPages = computed(() => (propertiesData.value as any)?.totalPages ?? 1)
 </script>

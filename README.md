@@ -26,6 +26,8 @@ The development is driven by **[Antigravity](https://antigravity.google/)** — 
 - **Core:** Vue 3
 - **Language:** TypeScript
 - **Styling:** Tailwind CSS
+- **OS:** Arch Linux
+- **Node Manager:** NVM
 
 ---
 
@@ -81,6 +83,46 @@ bun run preview
 2. **Componentization:** Create components for cards or any recurring elements.
 3. **Structure:** Manage folders and subfolders according to the pages you are working on.
 4. **Dependencies:** Do not configure or install external libraries without consulting first.
+
+---
+
+## 🛠 Troubleshooting
+
+### MCP Supabase Error: `npx` not found
+When working on **Arch Linux** with **NVM (Node Version Manager)**, you might encounter an error in AI environments stating that `npx` is not found. This happens because background processes (like MCP servers) often run in non-interactive shells that don't load the NVM path.
+
+#### Solution
+We've provided a script to create a symbolic link for `npx` in a system-wide path (`/usr/local/bin`), making it accessible to all processes.
+
+1. Run the fix script:
+   ```bash
+    NPX_PATH="/home/username/.nvm/versions/node/v24.11.1/bin/npx"
+    TARGET_PATH="/usr/local/bin/npx"
+
+    if [ -f "$TARGET_PATH" ]; then
+        echo "A file already exists at $TARGET_PATH."
+        ls -l "$TARGET_PATH"
+    else
+        echo "Creating symlink for npx..."
+        sudo ln -s "$NPX_PATH" "$TARGET_PATH"
+        if [ $? -eq 0 ]; then
+            echo "Successfully created symlink at $TARGET_PATH"
+        else
+            echo "Failed to create symlink. Please check sudo permissions."
+        fi
+    fi
+
+    # Verify
+    echo "Verifying npx availability..."
+    if command -v npx > /dev/null; then
+        echo "npx is now available in your PATH."
+        npx --version
+    else
+        echo "npx is still not available in your PATH. You might need to restart your shell."
+    fi
+
+   ```
+2. The script will look for your local `npx` path and ask for `sudo` permissions to create the link.
 
 ---
 

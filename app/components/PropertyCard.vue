@@ -18,8 +18,8 @@
     <div class="p-4 flex flex-col flex-grow">
       <div class="flex justify-between items-baseline mb-2">
         <h3 class="font-bold text-lg text-nordic-dark">
-          {{ formatPrice(property.price) }}<span v-if="property.priceSuffix"
-            class="text-sm font-normal text-nordic-dark/60">{{ property.priceSuffix }}</span>
+          {{ formatPrice(property.price) }}<span v-if="property.price_suffix"
+            class="text-sm font-normal text-nordic-dark/60">{{ property.price_suffix }}</span>
         </h3>
       </div>
       <h4 class="text-nordic-dark font-medium truncate mb-1">{{ property.title }}</h4>
