@@ -16,9 +16,12 @@
               class="material-icons text-nordic-dark/60 text-2xl group-focus-within:text-mosque transition-colors">search</span>
           </div>
           <input type="text"
+            v-model="searchQuery"
+            @keyup.enter="triggerSearch"
             class="block w-full pl-12 pr-4 py-4 rounded-xl border-none bg-white text-nordic-dark shadow-soft placeholder-nordic-dark/40 focus:ring-2 focus:ring-mosque focus:bg-white transition-all text-lg"
             placeholder="Search by city, neighborhood, or address...">
           <button
+            @click="triggerSearch"
             class="absolute inset-y-2 right-2 px-6 bg-mosque hover:bg-mosque/90 text-white font-medium rounded-lg transition-colors flex items-center justify-center shadow-lg shadow-mosque/20">
             Search
           </button>
@@ -47,6 +50,7 @@
           </button>
           <div class="w-px h-6 bg-nordic-dark/10 mx-2"></div>
           <button
+            @click="isFiltersOpen = true"
             class="whitespace-nowrap flex items-center gap-1 px-4 py-2 rounded-full text-nordic-dark font-medium text-sm hover:bg-black/5 transition-colors">
             <span class="material-icons text-base">tune</span> Filters
           </button>
@@ -186,6 +190,7 @@
       </p>
     </section>
   </main>
+  <SearchFiltersModal v-model="isFiltersOpen" @apply="onApplyFilters" />
 </template>
 
 <script setup lang="ts">
@@ -203,11 +208,43 @@ const featuredProperties = computed(() => (featuredData.value as any)?.data ?? [
 
 // --- New in Market (paginated) ---
 const currentPage = ref(1)
+const searchQuery = ref('')
+const activeSearchQuery = ref('') // Used to trigger fetch only on submit
+const isFiltersOpen = ref(false)
+const activeFilters = ref<any>({})
+
+const triggerSearch = () => {
+  activeSearchQuery.value = searchQuery.value
+  currentPage.value = 1 // reset to first page
+}
+
+const onApplyFilters = (filters: any) => {
+  activeFilters.value = filters
+  if (filters.location) {
+    searchQuery.value = filters.location
+    activeSearchQuery.value = filters.location
+  }
+  currentPage.value = 1
+}
 
 const { data: propertiesData, pending: propertiesPending } = await useAsyncData(
   'new-properties',
-  () => $fetch('/api/properties', { query: { featured: 'false', page: currentPage.value, limit: PAGE_LIMIT } }),
-  { watch: [currentPage] }
+  () => {
+    const queryParams: any = { 
+      featured: 'false', 
+      page: currentPage.value, 
+      limit: PAGE_LIMIT 
+    }
+    
+    if (activeSearchQuery.value) queryParams.search = activeSearchQuery.value
+    if (activeFilters.value.type) queryParams.type = activeFilters.value.type
+    if (activeFilters.value.beds) queryParams.beds = activeFilters.value.beds
+    if (activeFilters.value.baths) queryParams.baths = activeFilters.value.baths
+    if (activeFilters.value.amenities?.length) queryParams.amenities = activeFilters.value.amenities.join(',')
+    
+    return $fetch('/api/properties', { query: queryParams })
+  },
+  { watch: [currentPage, activeSearchQuery, activeFilters] }
 )
 
 const newProperties = computed(() => (propertiesData.value as any)?.data ?? [])
