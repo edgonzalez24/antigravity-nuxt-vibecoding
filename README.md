@@ -22,12 +22,16 @@ The development is driven by **[Antigravity](https://antigravity.google/)** — 
 
 ## 🛠 Tech Stack
 
-- **Framework:** Nuxt 4
-- **Core:** Vue 3
-- **Language:** TypeScript
-- **Styling:** Tailwind CSS
-- **OS:** Arch Linux
-- **Node Manager:** NVM
+### Frontend
+- <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nuxtjs/nuxtjs-original.svg" width="20" height="20"/> **Nuxt.js 4** – Vue framework with SSR and static generation
+- <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vuejs/vuejs-original.svg" width="20" height="20"/> **Vue.js 3** – Progressive JavaScript framework
+- <img src="https://img.shields.io/badge/tailwindcss-%2338B2AC.svg?style=for-the-badge&logo=tailwind-css&logoColor=white" height="20"/> **Tailwind CSS 4** – Utility-first CSS framework
+- <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" width="20" height="20"/> **TypeScript** – Typed superset of JavaScript
+- **Nuxt Image** – Image optimization for Nuxt
+- <img src="https://img.shields.io/badge/Leaflet-199900?style=for-the-badge&logo=leaflet&logoColor=white" height="20"/> **Leaflet** – Open-source JavaScript library for interactive maps
+
+### Backend & Database
+- <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/supabase/supabase-original.svg" width="20" height="20"/> **Supabase** – Open source Firebase alternative
 
 ---
 
