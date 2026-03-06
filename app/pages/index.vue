@@ -182,7 +182,7 @@
       <!-- Result count -->
       <p v-if="totalProperties > 0" class="text-center text-sm text-nordic-dark/40 mt-4">
         Showing {{ (currentPage - 1) * PAGE_LIMIT + 1 }}–{{ Math.min(currentPage * PAGE_LIMIT, totalProperties) }} of {{
-        totalProperties }} properties
+          totalProperties }} properties
       </p>
     </section>
   </main>
@@ -196,7 +196,7 @@ const PAGE_LIMIT = 8
 // --- Featured Properties (non-paginated) ---
 const { data: featuredData, pending: featuredPending } = await useAsyncData(
   'featured-properties',
-  () => $fetch('/api/properties', { query: { featured: 'true', limit: 10 } })
+  () => $fetch('/api/properties', { query: { featured: 'true', limit: 2 } })
 )
 
 const featuredProperties = computed(() => (featuredData.value as any)?.data ?? [])
