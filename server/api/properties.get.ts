@@ -7,7 +7,8 @@ export default defineEventHandler(async (event) => {
   const limit = Math.min(50, Math.max(1, parseInt(String(query.limit ?? '8'))))
   const featuredParam = query.featured
   const searchParam = query.search
-  const typeParam = query.type
+  const typeParam = query.property_type
+  const statusParam = query.status
   const bedsParam = query.beds
   const bathsParam = query.baths
   const amenitiesParam = query.amenities
@@ -19,7 +20,7 @@ export default defineEventHandler(async (event) => {
   // Build the base query
   let dbQuery = client
     .from('properties')
-    .select('*', { count: 'exact' })
+    .select('*, property_types!inner(name)', { count: 'exact' })
     .order('created_at', { ascending: false }) // Sort by newest usually
 
   // Filter by featured flag if provided
@@ -34,7 +35,11 @@ export default defineEventHandler(async (event) => {
   }
 
   if (typeParam) {
-    dbQuery = dbQuery.eq('type', typeParam)
+    dbQuery = dbQuery.eq('property_types.name', typeParam)
+  }
+
+  if (statusParam) {
+    dbQuery = dbQuery.eq('status', statusParam)
   }
 
   if (bedsParam && Number(bedsParam) > 0) {

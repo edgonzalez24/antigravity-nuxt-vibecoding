@@ -2,15 +2,16 @@
   <NuxtLink :to="`/properties/${property.slug}`"
     class="bg-white rounded-xl overflow-hidden shadow-card hover:shadow-soft transition-all duration-300 group cursor-pointer h-full flex flex-col block">
     <div class="relative aspect-[4/3] overflow-hidden">
-      <NuxtImg :src="property.images?.[0] || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9'" :alt="property.title"
-        class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy" />
+      <NuxtImg :src="property.images?.[0] || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9'"
+        :alt="property.title" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+        loading="lazy" />
       <button
-        class="absolute top-3 right-3 p-2 bg-white/90 rounded-full hover:bg-mosque hover:text-white transition-colors text-nordic-dark">
+        class="absolute top-3 right-3 w-9 h-9 flex items-center justify-center bg-white/90 rounded-full hover:bg-mosque hover:text-white transition-colors text-nordic-dark">
         <span class="material-icons text-lg">favorite_border</span>
       </button>
       <div v-if="property.tags && property.tags.length"
         class="absolute bottom-3 left-3 text-white text-xs font-bold px-2 py-1 rounded"
-        :class="property.type === 'rent' ? 'bg-mosque/90' : 'bg-nordic-dark/90'">
+        :class="property.status === 'rent' ? 'bg-mosque/90' : 'bg-nordic-dark/90'">
         {{ property.tags[0] }}
       </div>
     </div>

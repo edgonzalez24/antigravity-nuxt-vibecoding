@@ -15,42 +15,27 @@
             <span
               class="material-icons text-nordic-dark/60 text-2xl group-focus-within:text-mosque transition-colors">search</span>
           </div>
-          <input type="text"
-            v-model="searchQuery"
-            @keyup.enter="triggerSearch"
+          <input type="text" v-model="searchQuery" @keyup.enter="triggerSearch"
             class="block w-full pl-12 pr-4 py-4 rounded-xl border-none bg-white text-nordic-dark shadow-soft placeholder-nordic-dark/40 focus:ring-2 focus:ring-mosque focus:bg-white transition-all text-lg"
             placeholder="Search by city, neighborhood, or address...">
-          <button
-            @click="triggerSearch"
+          <button @click="triggerSearch"
             class="absolute inset-y-2 right-2 px-6 bg-mosque hover:bg-mosque/90 text-white font-medium rounded-lg transition-colors flex items-center justify-center shadow-lg shadow-mosque/20">
             Search
           </button>
         </div>
 
         <div class="flex items-center justify-center gap-3 overflow-x-auto hide-scroll py-2 px-4 -mx-4">
-          <button
-            class="whitespace-nowrap px-5 py-2 rounded-full bg-nordic-dark text-white text-sm font-medium shadow-lg shadow-nordic-dark/10 transition-transform hover:-translate-y-0.5">
-            All
-          </button>
-          <button
-            class="whitespace-nowrap px-5 py-2 rounded-full bg-white border border-nordic-dark/5 text-nordic-dark/60 hover:text-nordic-dark hover:border-mosque/50 text-sm font-medium transition-all hover:bg-mosque/5">
-            House
-          </button>
-          <button
-            class="whitespace-nowrap px-5 py-2 rounded-full bg-white border border-nordic-dark/5 text-nordic-dark/60 hover:text-nordic-dark hover:border-mosque/50 text-sm font-medium transition-all hover:bg-mosque/5">
-            Apartment
-          </button>
-          <button
-            class="whitespace-nowrap px-5 py-2 rounded-full bg-white border border-nordic-dark/5 text-nordic-dark/60 hover:text-nordic-dark hover:border-mosque/50 text-sm font-medium transition-all hover:bg-mosque/5">
-            Villa
-          </button>
-          <button
-            class="whitespace-nowrap px-5 py-2 rounded-full bg-white border border-nordic-dark/5 text-nordic-dark/60 hover:text-nordic-dark hover:border-mosque/50 text-sm font-medium transition-all hover:bg-mosque/5">
-            Penthouse
+          <button v-for="type in ['All', 'House', 'Apartment', 'Villa', 'Penthouse']" :key="type"
+            @click="setQuickType(type)" :class="[
+              'whitespace-nowrap px-5 py-2 rounded-full text-sm font-medium transition-all',
+              activeFilters.property_type === type || (type === 'All' && !activeFilters.property_type)
+                ? 'bg-nordic-dark text-white shadow-lg shadow-nordic-dark/10 hover:-translate-y-0.5'
+                : 'bg-white border border-nordic-dark/5 text-nordic-dark/60 hover:text-nordic-dark hover:border-mosque/50 hover:bg-mosque/5'
+            ]">
+            {{ type }}
           </button>
           <div class="w-px h-6 bg-nordic-dark/10 mx-2"></div>
-          <button
-            @click="isFiltersOpen = true"
+          <button @click="isFiltersOpen = true"
             class="whitespace-nowrap flex items-center gap-1 px-4 py-2 rounded-full text-nordic-dark font-medium text-sm hover:bg-black/5 transition-colors">
             <span class="material-icons text-base">tune</span> Filters
           </button>
@@ -59,7 +44,7 @@
     </section>
 
     <!-- Featured Collections Section -->
-    <section class="mb-16">
+    <section v-show="!hasActiveSearchOrFilter" class="mb-16">
       <div class="flex items-end justify-between mb-8">
         <div>
           <h2 class="text-2xl font-light text-nordic-dark">Featured Collections</h2>
@@ -83,10 +68,11 @@
       </div>
 
       <div v-else class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div v-for="property in featuredProperties" :key="property.id"
-          class="group relative rounded-xl overflow-hidden shadow-soft bg-white cursor-pointer">
+        <NuxtLink v-for="property in featuredProperties" :key="property.id" :to="`/properties/${property.slug}`"
+          class="group relative rounded-xl overflow-hidden shadow-soft bg-white cursor-pointer block">
           <div class="aspect-[4/3] w-full overflow-hidden relative">
-            <NuxtImg :src="property.images?.[0] || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9'" :alt="property.title"
+            <NuxtImg :src="property.images?.[0] || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9'"
+              :alt="property.title"
               class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               loading="lazy" />
             <div v-if="property.tags && property.tags.length"
@@ -126,7 +112,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </NuxtLink>
       </div>
     </section>
 
@@ -138,11 +124,15 @@
           <p class="text-nordic-dark/60 mt-1 text-sm">Fresh opportunities added this week.</p>
         </div>
         <div class="hidden md:flex bg-white p-1 rounded-lg">
-          <button class="px-4 py-1.5 rounded-md text-sm font-medium bg-nordic-dark text-white shadow-sm">All</button>
-          <button
-            class="px-4 py-1.5 rounded-md text-sm font-medium text-nordic-dark/60 hover:text-nordic-dark">Buy</button>
-          <button
-            class="px-4 py-1.5 rounded-md text-sm font-medium text-nordic-dark/60 hover:text-nordic-dark">Rent</button>
+          <button @click="setQuickStatus('All')"
+            :class="['px-4 py-1.5 rounded-md text-sm font-medium transition-all',
+              !activeFilters.status || activeFilters.status === 'All' ? 'bg-nordic-dark text-white shadow-sm' : 'text-nordic-dark/60 hover:text-nordic-dark']">All</button>
+          <button @click="setQuickStatus('sale')"
+            :class="['px-4 py-1.5 rounded-md text-sm font-medium transition-all',
+              activeFilters.status === 'sale' ? 'bg-nordic-dark text-white shadow-sm' : 'text-nordic-dark/60 hover:text-nordic-dark']">Buy</button>
+          <button @click="setQuickStatus('rent')"
+            :class="['px-4 py-1.5 rounded-md text-sm font-medium transition-all',
+              activeFilters.status === 'rent' ? 'bg-nordic-dark text-white shadow-sm' : 'text-nordic-dark/60 hover:text-nordic-dark']">Rent</button>
         </div>
       </div>
 
@@ -204,18 +194,47 @@ const { data: featuredData, pending: featuredPending } = await useAsyncData(
   () => $fetch('/api/properties', { query: { featured: 'true', limit: 2 } })
 )
 
-const featuredProperties = computed(() => (featuredData.value as any)?.data ?? [])
+const featuredProperties = computed(() => {
+  const data = (featuredData.value as any)?.data ?? []
+  return data.slice(0, 2)
+})
 
 // --- New in Market (paginated) ---
 const currentPage = ref(1)
 const searchQuery = ref('')
 const activeSearchQuery = ref('') // Used to trigger fetch only on submit
 const isFiltersOpen = ref(false)
-const activeFilters = ref<any>({})
+const route = useRoute()
+const router = useRouter()
+
+const activeFilters = ref<any>({
+  property_type: route.query.property_type || undefined,
+  status: route.query.status || undefined,
+})
+
+const hasActiveSearchOrFilter = computed(() => {
+  const hasSearch = !!activeSearchQuery.value
+  const hasFilters = Object.values(activeFilters.value).some((v: any) => Array.isArray(v) ? v.length > 0 : !!v)
+  return hasSearch || hasFilters
+})
 
 const triggerSearch = () => {
   activeSearchQuery.value = searchQuery.value
   currentPage.value = 1 // reset to first page
+}
+
+const setQuickType = (type: string) => {
+  const newType = type === 'All' ? undefined : type
+  activeFilters.value = { ...activeFilters.value, property_type: newType }
+  router.push({ query: { ...route.query, property_type: newType } })
+  currentPage.value = 1
+}
+
+const setQuickStatus = (status: string) => {
+  const newStatus = status === 'All' ? undefined : status
+  activeFilters.value = { ...activeFilters.value, status: newStatus }
+  router.push({ query: { ...route.query, status: newStatus } })
+  currentPage.value = 1
 }
 
 const onApplyFilters = (filters: any) => {
@@ -230,18 +249,20 @@ const onApplyFilters = (filters: any) => {
 const { data: propertiesData, pending: propertiesPending } = await useAsyncData(
   'new-properties',
   () => {
-    const queryParams: any = { 
-      featured: 'false', 
-      page: currentPage.value, 
-      limit: PAGE_LIMIT 
+    const queryParams: any = {
+      featured: 'false',
+      page: currentPage.value,
+      limit: PAGE_LIMIT
     }
-    
+
     if (activeSearchQuery.value) queryParams.search = activeSearchQuery.value
-    if (activeFilters.value.type) queryParams.type = activeFilters.value.type
+    if (activeFilters.value.property_type) queryParams.property_type = activeFilters.value.property_type
+    if (activeFilters.value.type) queryParams.property_type = activeFilters.value.type // fallback if modal sets type
+    if (activeFilters.value.status) queryParams.status = activeFilters.value.status
     if (activeFilters.value.beds) queryParams.beds = activeFilters.value.beds
     if (activeFilters.value.baths) queryParams.baths = activeFilters.value.baths
     if (activeFilters.value.amenities?.length) queryParams.amenities = activeFilters.value.amenities.join(',')
-    
+
     return $fetch('/api/properties', { query: queryParams })
   },
   { watch: [currentPage, activeSearchQuery, activeFilters] }

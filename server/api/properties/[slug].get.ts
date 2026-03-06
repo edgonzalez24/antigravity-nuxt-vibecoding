@@ -14,7 +14,7 @@ export default defineEventHandler(async (event) => {
 
   const { data, error } = await client
     .from('properties')
-    .select('*')
+    .select('*, property_types(name)')
     .eq('slug', slug)
     .single()
 

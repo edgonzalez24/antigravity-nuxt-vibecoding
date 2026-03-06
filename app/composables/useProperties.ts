@@ -19,7 +19,8 @@ export interface Property {
     email: string
   }
   tags: string[]
-  type: 'sale' | 'rent'
+  property_types?: { name: string }
+  status: 'sale' | 'rent'
   featured?: boolean
   created_at?: string
 }
