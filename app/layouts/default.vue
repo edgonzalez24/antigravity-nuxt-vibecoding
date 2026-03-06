@@ -12,17 +12,21 @@
           </NuxtLink>
 
           <div class="hidden md:flex items-center space-x-8">
-            <a href="#" class="text-mosque font-medium text-sm border-b-2 border-mosque px-1 py-1">Buy</a>
+            <a href="#" class="text-mosque font-medium text-sm border-b-2 border-mosque px-1 py-1">{{ $t('nav.buy')
+              }}</a>
             <a href="#"
-              class="text-nordic-dark/70 hover:text-nordic-dark font-medium text-sm hover:border-b-2 hover:border-nordic-dark/20 px-1 py-1 transition-all">Rent</a>
+              class="text-nordic-dark/70 hover:text-nordic-dark font-medium text-sm hover:border-b-2 hover:border-nordic-dark/20 px-1 py-1 transition-all">{{
+                $t('nav.rent') }}</a>
             <a href="#"
-              class="text-nordic-dark/70 hover:text-nordic-dark font-medium text-sm hover:border-b-2 hover:border-nordic-dark/20 px-1 py-1 transition-all">Sell</a>
+              class="text-nordic-dark/70 hover:text-nordic-dark font-medium text-sm hover:border-b-2 hover:border-nordic-dark/20 px-1 py-1 transition-all">{{
+                $t('nav.sell') }}</a>
             <a href="#"
-              class="text-nordic-dark/70 hover:text-nordic-dark font-medium text-sm hover:border-b-2 hover:border-nordic-dark/20 px-1 py-1 transition-all">Saved
-              Homes</a>
+              class="text-nordic-dark/70 hover:text-nordic-dark font-medium text-sm hover:border-b-2 hover:border-nordic-dark/20 px-1 py-1 transition-all">{{
+                $t('nav.saved_homes') }}</a>
           </div>
 
           <div class="flex items-center space-x-6">
+            <LanguageSelector />
             <button class="text-nordic-dark hover:text-mosque transition-colors">
               <span class="material-icons">search</span>
             </button>

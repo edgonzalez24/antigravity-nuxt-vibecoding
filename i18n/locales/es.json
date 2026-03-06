@@ -1,0 +1,95 @@
+{
+  "nav": {
+    "buy": "Comprar",
+    "rent": "Alquilar",
+    "sell": "Vender",
+    "saved_homes": "Casas Guardadas"
+  },
+  "home": {
+    "hero": {
+      "find_your": "Encuentra tu",
+      "sanctuary": "santuario",
+      "search_placeholder": "Buscar por ciudad, barrio o dirección...",
+      "search_button": "Buscar",
+      "filters": "Filtros"
+    },
+    "featured": {
+      "title": "Colecciones Destacadas",
+      "subtitle": "Propiedades seleccionadas para el ojo exigente.",
+      "view_all": "Ver todo"
+    },
+    "new_market": {
+      "title": "Novedades en el Mercado",
+      "subtitle": "Nuevas oportunidades añadidas esta semana.",
+      "all": "Todo",
+      "buy": "Comprar",
+      "rent": "Alquilar"
+    },
+    "property": {
+      "beds": "Habitaciones",
+      "baths": "Baños",
+      "area": "m²",
+      "showing": "Mostrando",
+      "of": "de",
+      "properties": "propiedades"
+    },
+    "pagination": {
+      "previous": "Anterior",
+      "next": "Siguiente",
+      "page": "Página"
+    }
+  },
+  "filters": {
+    "title": "Filtros",
+    "location": "Ubicación",
+    "search_placeholder": "Ciudad, barrio o dirección",
+    "property_type": "Tipo de Propiedad",
+    "any_type": "Cualquier Tipo",
+    "for_sale": "En Venta",
+    "for_rent": "En Alquiler",
+    "bedrooms": "Habitaciones",
+    "bathrooms": "Baños",
+    "amenities_features": "Servicios y Características",
+    "clear_all": "Borrar todos los filtros",
+    "apply_filters": "Aplicar Filtros",
+    "pool": "Piscina",
+    "gym": "Gimnasio",
+    "parking": "Estacionamiento",
+    "ac": "Aire Acondicionado",
+    "wifi": "Wifi de alta velocidad",
+    "patio": "Patio / Terraza"
+  },
+  "property_details": {
+    "premium": "Premium",
+    "new": "Nuevo",
+    "view_all_photos": "Ver todas las fotos",
+    "features_title": "Características",
+    "square_meters": "Metros Cuadrados",
+    "bedrooms": "Habitaciones",
+    "bathrooms": "Baños",
+    "garage": "Garaje",
+    "about_title": "Acerca de esta casa",
+    "read_more": "Leer más",
+    "amenities_title": "Servicios",
+    "estimated_payment": "Pago Estimado",
+    "starting_from": "Desde",
+    "with_down": "con 20% de anticipo",
+    "calculate_mortgage": "Calcular Hipoteca",
+    "top_rated_agent": "Agente Destacado",
+    "schedule_visit": "Agendar Visita",
+    "contact_agent": "Contactar Agente",
+    "view_on_map": "Ver en el Mapa",
+    "not_found": "Propiedad no encontrada",
+    "return_home": "Volver al Inicio",
+    "default_amenities": {
+      "smart_home": "Sistema de Casa Inteligente",
+      "pool": "Piscina",
+      "heating_cooling": "Calefacción y Aire Acondicionado",
+      "ev_charging": "Carga de Vehículos Eléctricos",
+      "gym": "Gimnasio Privado",
+      "wine_cellar": "Bodega de Vinos"
+    },
+    "description_1": "Experimente el lujo moderno en esta impresionante casa ubicada en el corazón de {location}. Diseñada con énfasis en la vida interior-exterior, la residencia cuenta con paredes de vidrio de piso a techo que inundan los interiores con luz natural.",
+    "description_2": "La cocina de concepto abierto está equipada con electrodomésticos de primera línea y gabinetes a medida, perfecta para los amantes de la gastronomía. Retírese a la suite principal, un santuario de relajación con un baño inspirado en un spa y un balcón privado."
+  }
+}

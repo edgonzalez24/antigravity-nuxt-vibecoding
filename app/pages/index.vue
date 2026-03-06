@@ -4,8 +4,8 @@
     <section class="py-12 md:py-16">
       <div class="max-w-3xl mx-auto text-center space-y-8">
         <h1 class="text-4xl md:text-5xl lg:text-6xl font-light text-nordic-dark leading-tight">
-          Find your <span class="relative inline-block">
-            <span class="relative z-10 font-medium">sanctuary</span>
+          {{ $t('home.hero.find_your') }} <span class="relative inline-block">
+            <span class="relative z-10 font-medium">{{ $t('home.hero.sanctuary') }}</span>
             <span class="absolute bottom-2 left-0 w-full h-3 bg-mosque/20 -rotate-1 z-0"></span>
           </span>.
         </h1>
@@ -17,10 +17,10 @@
           </div>
           <input type="text" v-model="searchQuery" @keyup.enter="triggerSearch"
             class="block w-full pl-12 pr-4 py-4 rounded-xl border-none bg-white text-nordic-dark shadow-soft placeholder-nordic-dark/40 focus:ring-2 focus:ring-mosque focus:bg-white transition-all text-lg"
-            placeholder="Search by city, neighborhood, or address...">
+            :placeholder="$t('home.hero.search_placeholder')">
           <button @click="triggerSearch"
             class="absolute inset-y-2 right-2 px-6 bg-mosque hover:bg-mosque/90 text-white font-medium rounded-lg transition-colors flex items-center justify-center shadow-lg shadow-mosque/20">
-            Search
+            {{ $t('home.hero.search_button') }}
           </button>
         </div>
 
@@ -37,7 +37,7 @@
           <div class="w-px h-6 bg-nordic-dark/10 mx-2"></div>
           <button @click="isFiltersOpen = true"
             class="whitespace-nowrap flex items-center gap-1 px-4 py-2 rounded-full text-nordic-dark font-medium text-sm hover:bg-black/5 transition-colors">
-            <span class="material-icons text-base">tune</span> Filters
+            <span class="material-icons text-base">tune</span> {{ $t('home.hero.filters') }}
           </button>
         </div>
       </div>
@@ -47,12 +47,12 @@
     <section v-show="!hasActiveSearchOrFilter" class="mb-16">
       <div class="flex items-end justify-between mb-8">
         <div>
-          <h2 class="text-2xl font-light text-nordic-dark">Featured Collections</h2>
-          <p class="text-nordic-dark/60 mt-1 text-sm">Curated properties for the discerning eye.</p>
+          <h2 class="text-2xl font-light text-nordic-dark">{{ $t('home.featured.title') }}</h2>
+          <p class="text-nordic-dark/60 mt-1 text-sm">{{ $t('home.featured.subtitle') }}</p>
         </div>
         <a href="#"
           class="hidden sm:flex items-center gap-1 text-sm font-medium text-mosque hover:opacity-70 transition-opacity">
-          View all <span class="material-icons text-sm">arrow_forward</span>
+          {{ $t('home.featured.view_all') }} <span class="material-icons text-sm">arrow_forward</span>
         </a>
       </div>
 
@@ -102,13 +102,14 @@
 
             <div class="flex items-center gap-6 mt-6 pt-6 border-t border-nordic-dark/5">
               <div class="flex items-center gap-2 text-nordic-dark/60 text-sm">
-                <span class="material-icons text-lg">king_bed</span> {{ property.beds }} Beds
+                <span class="material-icons text-lg">king_bed</span> {{ property.beds }} {{ $t('home.property.beds') }}
               </div>
               <div class="flex items-center gap-2 text-nordic-dark/60 text-sm">
-                <span class="material-icons text-lg">bathtub</span> {{ property.baths }} Baths
+                <span class="material-icons text-lg">bathtub</span> {{ property.baths }} {{ $t('home.property.baths') }}
               </div>
               <div class="flex items-center gap-2 text-nordic-dark/60 text-sm">
-                <span class="material-icons text-lg">square_foot</span> {{ property.area }} m²
+                <span class="material-icons text-lg">square_foot</span> {{ property.area }} {{ $t('home.property.area')
+                }}
               </div>
             </div>
           </div>
@@ -120,19 +121,22 @@
     <section>
       <div class="flex items-end justify-between mb-8">
         <div>
-          <h2 class="text-2xl font-light text-nordic-dark">New in Market</h2>
-          <p class="text-nordic-dark/60 mt-1 text-sm">Fresh opportunities added this week.</p>
+          <h2 class="text-2xl font-light text-nordic-dark">{{ $t('home.new_market.title') }}</h2>
+          <p class="text-nordic-dark/60 mt-1 text-sm">{{ $t('home.new_market.subtitle') }}</p>
         </div>
         <div class="hidden md:flex bg-white p-1 rounded-lg">
           <button @click="setQuickStatus('All')"
             :class="['px-4 py-1.5 rounded-md text-sm font-medium transition-all',
-              !activeFilters.status || activeFilters.status === 'All' ? 'bg-nordic-dark text-white shadow-sm' : 'text-nordic-dark/60 hover:text-nordic-dark']">All</button>
+              !activeFilters.status || activeFilters.status === 'All' ? 'bg-nordic-dark text-white shadow-sm' : 'text-nordic-dark/60 hover:text-nordic-dark']">{{
+                $t('home.new_market.all') }}</button>
           <button @click="setQuickStatus('sale')"
             :class="['px-4 py-1.5 rounded-md text-sm font-medium transition-all',
-              activeFilters.status === 'sale' ? 'bg-nordic-dark text-white shadow-sm' : 'text-nordic-dark/60 hover:text-nordic-dark']">Buy</button>
+              activeFilters.status === 'sale' ? 'bg-nordic-dark text-white shadow-sm' : 'text-nordic-dark/60 hover:text-nordic-dark']">{{
+                $t('home.new_market.buy') }}</button>
           <button @click="setQuickStatus('rent')"
             :class="['px-4 py-1.5 rounded-md text-sm font-medium transition-all',
-              activeFilters.status === 'rent' ? 'bg-nordic-dark text-white shadow-sm' : 'text-nordic-dark/60 hover:text-nordic-dark']">Rent</button>
+              activeFilters.status === 'rent' ? 'bg-nordic-dark text-white shadow-sm' : 'text-nordic-dark/60 hover:text-nordic-dark']">{{
+                $t('home.new_market.rent') }}</button>
         </div>
       </div>
 
@@ -156,27 +160,28 @@
         <button :disabled="currentPage <= 1" @click="currentPage--"
           class="flex items-center gap-2 px-5 py-2.5 bg-white border border-nordic-dark/10 rounded-lg text-nordic-dark font-medium text-sm transition-all hover:border-mosque hover:text-mosque disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:border-nordic-dark/10 disabled:hover:text-nordic-dark">
           <span class="material-icons text-base">arrow_back</span>
-          Previous
+          {{ $t('home.pagination.previous') }}
         </button>
 
         <div class="flex items-center gap-2">
-          <span class="text-sm text-nordic-dark/60">Page</span>
+          <span class="text-sm text-nordic-dark/60">{{ $t('home.pagination.page') }}</span>
           <span class="text-sm font-semibold text-nordic-dark">{{ currentPage }}</span>
-          <span class="text-sm text-nordic-dark/60">of</span>
+          <span class="text-sm text-nordic-dark/60">{{ $t('home.property.of') }}</span>
           <span class="text-sm font-semibold text-nordic-dark">{{ totalPages }}</span>
         </div>
 
         <button :disabled="currentPage >= totalPages" @click="currentPage++"
           class="flex items-center gap-2 px-5 py-2.5 bg-white border border-nordic-dark/10 rounded-lg text-nordic-dark font-medium text-sm transition-all hover:border-mosque hover:text-mosque disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:border-nordic-dark/10 disabled:hover:text-nordic-dark">
-          Next
+          {{ $t('home.pagination.next') }}
           <span class="material-icons text-base">arrow_forward</span>
         </button>
       </div>
 
       <!-- Result count -->
       <p v-if="totalProperties > 0" class="text-center text-sm text-nordic-dark/40 mt-4">
-        Showing {{ (currentPage - 1) * PAGE_LIMIT + 1 }}–{{ Math.min(currentPage * PAGE_LIMIT, totalProperties) }} of {{
-          totalProperties }} properties
+        {{ $t('home.property.showing') }} {{ (currentPage - 1) * PAGE_LIMIT + 1 }}–{{ Math.min(currentPage * PAGE_LIMIT,
+        totalProperties) }} {{ $t('home.property.of') }} {{
+          totalProperties }} {{ $t('home.property.properties') }}
       </p>
     </section>
   </main>

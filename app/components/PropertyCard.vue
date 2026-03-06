@@ -34,7 +34,8 @@
           <span class="material-icons text-sm text-mosque/80">bathtub</span> {{ property.baths }}
         </div>
         <div class="flex items-center gap-1 text-nordic-dark/60 text-xs">
-          <span class="material-icons text-sm text-mosque/80">square_foot</span> {{ property.area }}m²
+          <span class="material-icons text-sm text-mosque/80">square_foot</span> {{ property.area }} {{
+            $t('home.property.area') }}
         </div>
       </div>
     </div>

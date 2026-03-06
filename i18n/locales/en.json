@@ -1,0 +1,95 @@
+{
+  "nav": {
+    "buy": "Buy",
+    "rent": "Rent",
+    "sell": "Sell",
+    "saved_homes": "Saved Homes"
+  },
+  "home": {
+    "hero": {
+      "find_your": "Find your",
+      "sanctuary": "sanctuary",
+      "search_placeholder": "Search by city, neighborhood, or address...",
+      "search_button": "Search",
+      "filters": "Filters"
+    },
+    "featured": {
+      "title": "Featured Collections",
+      "subtitle": "Curated properties for the discerning eye.",
+      "view_all": "View all"
+    },
+    "new_market": {
+      "title": "New in Market",
+      "subtitle": "Fresh opportunities added this week.",
+      "all": "All",
+      "buy": "Buy",
+      "rent": "Rent"
+    },
+    "property": {
+      "beds": "Beds",
+      "baths": "Baths",
+      "area": "m²",
+      "showing": "Showing",
+      "of": "of",
+      "properties": "properties"
+    },
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next",
+      "page": "Page"
+    }
+  },
+  "filters": {
+    "title": "Filters",
+    "location": "Location",
+    "search_placeholder": "City, neighborhood, or address",
+    "property_type": "Property Type",
+    "any_type": "Any Type",
+    "for_sale": "For Sale",
+    "for_rent": "For Rent",
+    "bedrooms": "Bedrooms",
+    "bathrooms": "Bathrooms",
+    "amenities_features": "Amenities & Features",
+    "clear_all": "Clear all filters",
+    "apply_filters": "Apply Filters",
+    "pool": "Swimming Pool",
+    "gym": "Gym",
+    "parking": "Parking",
+    "ac": "Air Conditioning",
+    "wifi": "High-speed Wifi",
+    "patio": "Patio / Terrace"
+  },
+  "property_details": {
+    "premium": "Premium",
+    "new": "New",
+    "view_all_photos": "View All Photos",
+    "features_title": "Property Features",
+    "square_meters": "Square Meters",
+    "bedrooms": "Bedrooms",
+    "bathrooms": "Bathrooms",
+    "garage": "Garage",
+    "about_title": "About this home",
+    "read_more": "Read more",
+    "amenities_title": "Amenities",
+    "estimated_payment": "Estimated Payment",
+    "starting_from": "Starting from",
+    "with_down": "with 20% down",
+    "calculate_mortgage": "Calculate Mortgage",
+    "top_rated_agent": "Top Rated Agent",
+    "schedule_visit": "Schedule Visit",
+    "contact_agent": "Contact Agent",
+    "view_on_map": "View on Map",
+    "not_found": "Property not found",
+    "return_home": "Return to Home",
+    "default_amenities": {
+      "smart_home": "Smart Home System",
+      "pool": "Swimming Pool",
+      "heating_cooling": "Central Heating & Cooling",
+      "ev_charging": "Electric Vehicle Charging",
+      "gym": "Private Gym",
+      "wine_cellar": "Wine Cellar"
+    },
+    "description_1": "Experience modern luxury in this architecturally stunning home located in the heart of {location}. Designed with an emphasis on indoor-outdoor living, the residence features floor-to-ceiling glass walls that flood the interiors with natural light.",
+    "description_2": "The open-concept kitchen is equipped with top-of-the-line appliances and custom cabinetry, perfect for culinary enthusiasts. Retreat to the primary suite, a sanctuary of relaxation with a spa-inspired bath and private balcony."
+  }
+}
