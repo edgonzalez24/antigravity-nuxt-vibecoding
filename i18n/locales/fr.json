@@ -91,5 +91,18 @@
     },
     "description_1": "Découvrez le luxe moderne dans cette maison à couper le souffle située au cœur de {location}. Conçue en mettant l'accent sur la vie intérieure-extérieure, la résidence dispose de murs en verre du sol au plafond qui inondent les intérieurs de lumière naturelle.",
     "description_2": "La cuisine à aire ouverte est équipée d'appareils haut de gamme et d'armoires sur mesure, parfaite pour les amateurs de gastronomie. Retirez-vous dans la suite principale, un sanctuaire de détente avec une baignoire d'inspiration spa et un balcon privé."
+  },
+  "auth": {
+    "login": "Se connecter",
+    "logout": "Se déconnecter",
+    "welcome": "Bienvenue chez LuxeEstate",
+    "subtitle": "Découvrez des propriétés exclusives dans le monde entier.",
+    "continue_google": "Continuer avec Google",
+    "continue_github": "Continuer avec GitHub",
+    "no_account": "Vous n'avez pas de compte ?",
+    "signup": "S'inscrire",
+    "privacy": "Politique de confidentialité",
+    "terms": "Conditions d'utilisation",
+    "help": "Centre d'aide"
   }
 }

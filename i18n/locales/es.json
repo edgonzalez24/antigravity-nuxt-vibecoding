@@ -91,5 +91,18 @@
     },
     "description_1": "Experimente el lujo moderno en esta impresionante casa ubicada en el corazón de {location}. Diseñada con énfasis en la vida interior-exterior, la residencia cuenta con paredes de vidrio de piso a techo que inundan los interiores con luz natural.",
     "description_2": "La cocina de concepto abierto está equipada con electrodomésticos de primera línea y gabinetes a medida, perfecta para los amantes de la gastronomía. Retírese a la suite principal, un santuario de relajación con un baño inspirado en un spa y un balcón privado."
+  },
+  "auth": {
+    "login": "Iniciar Sesión",
+    "logout": "Cerrar Sesión",
+    "welcome": "Bienvenido a LuxeEstate",
+    "subtitle": "Descubra propiedades exclusivas en todo el mundo.",
+    "continue_google": "Continuar con Google",
+    "continue_github": "Continuar con GitHub",
+    "no_account": "¿No tienes una cuenta?",
+    "signup": "Regístrate",
+    "privacy": "Política de Privacidad",
+    "terms": "Términos de Servicio",
+    "help": "Centro de Ayuda"
   }
 }

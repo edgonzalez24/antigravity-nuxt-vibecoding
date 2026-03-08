@@ -46,13 +46,13 @@
                   </div>
                 </button>
                 <button @click="signOut" class="text-sm text-nordic-dark/70 hover:text-red-500 transition-colors ml-4 font-medium border border-gray-200 px-3 py-1.5 rounded-md hover:border-red-500">
-                  Logout
+                  {{ $t('auth.logout') }}
                 </button>
               </div>
             </template>
             <template v-else>
-              <NuxtLink to="/login" class="ml-2 pl-4 border-l border-nordic-dark/10 text-mosque font-medium hover:text-mosque/80 transition-colors">
-                Login
+              <NuxtLink :to="localePath('/login')" class="ml-2 pl-4 border-l border-nordic-dark/10 text-mosque font-medium hover:text-mosque/80 transition-colors">
+                {{ $t('auth.login') }}
               </NuxtLink>
             </template>
           </div>
@@ -67,6 +67,7 @@
 <script setup lang="ts">
 const user = useSupabaseUser()
 const supabase = useSupabaseClient()
+const localePath = useLocalePath()
 
 const signOut = async () => {
   await supabase.auth.signOut()
