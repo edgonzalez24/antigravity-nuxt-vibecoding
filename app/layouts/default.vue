@@ -35,14 +35,26 @@
               <span
                 class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full border-2 border-background-light"></span>
             </button>
-            <button class="flex items-center gap-2 pl-2 border-l border-nordic-dark/10 ml-2">
-              <div
-                class="w-9 h-9 rounded-full bg-gray-200 overflow-hidden ring-2 ring-transparent hover:ring-mosque transition-all">
-                <NuxtImg
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuCAWhQZ663Bd08kmzjbOPmUk4UIxYooNONShMEFXLR-DtmVi6Oz-TiaY77SPwFk7g0OobkeZEOMvt6v29mSOD0Xm2g95WbBG3ZjWXmiABOUwGU0LOySRfVDo-JTXQ0-gtwjWxbmue0qDm91m-zEOEZwAW6iRFB1qC1bAU-wkjxm67Sbztq8w7srHkFT9bVEC86qG-FzhOBTomhAurNRmx9l8Yfqabk328NfdKuVLckgCdaPsNFE3yN65MeoRi05GA_gXIMwG4YDIeA"
-                  alt="Profile" class="w-full h-full object-cover" width="36" height="36" />
+            <template v-if="user">
+              <div class="flex items-center ml-2 border-l border-nordic-dark/10 pl-2">
+                <button class="flex items-center gap-2">
+                  <div
+                    class="w-9 h-9 rounded-full overflow-hidden ring-2 ring-transparent hover:ring-mosque transition-all">
+                    <NuxtImg
+                      :src="user.user_metadata?.avatar_url || 'https://lh3.googleusercontent.com/aida-public/AB6AXuCAWhQZ663Bd08kmzjbOPmUk4UIxYooNONShMEFXLR-DtmVi6Oz-TiaY77SPwFk7g0OobkeZEOMvt6v29mSOD0Xm2g95WbBG3ZjWXmiABOUwGU0LOySRfVDo-JTXQ0-gtwjWxbmue0qDm91m-zEOEZwAW6iRFB1qC1bAU-wkjxm67Sbztq8w7srHkFT9bVEC86qG-FzhOBTomhAurNRmx9l8Yfqabk328NfdKuVLckgCdaPsNFE3yN65MeoRi05GA_gXIMwG4YDIeA'"
+                      alt="Profile" class="w-full h-full object-cover" width="36" height="36" />
+                  </div>
+                </button>
+                <button @click="signOut" class="text-sm text-nordic-dark/70 hover:text-red-500 transition-colors ml-4 font-medium border border-gray-200 px-3 py-1.5 rounded-md hover:border-red-500">
+                  Logout
+                </button>
               </div>
-            </button>
+            </template>
+            <template v-else>
+              <NuxtLink to="/login" class="ml-2 pl-4 border-l border-nordic-dark/10 text-mosque font-medium hover:text-mosque/80 transition-colors">
+                Login
+              </NuxtLink>
+            </template>
           </div>
         </div>
       </div>
@@ -53,6 +65,13 @@
 </template>
 
 <script setup lang="ts">
+const user = useSupabaseUser()
+const supabase = useSupabaseClient()
+
+const signOut = async () => {
+  await supabase.auth.signOut()
+}
+
 useHead({
   link: [
     { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap' },
