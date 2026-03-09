@@ -197,7 +197,7 @@
 
             <!-- Map Preview -->
             <div
-              class="relative h-48 w-full rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-primary/30 group">
+              class="relative h-48 w-full rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-primary/30 group mb-4">
               <img alt="Map view of city streets"
                 class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-all duration-500"
                 src="https://lh3.googleusercontent.com/aida-public/AB6AXuAS55FY7gfArnlTpNsdabJk9nBO5uQJgOwIsl8beO34JRZ9dMmjLoIkTuTUO72Y9L5tUmQqTReQWebUWadAWwLusGmRQiIict5sqY--yRaOxuYpTzfR4vv4RKh1ex6oxY64e0kbSeMudNO6pv-gG0WzVWs-pDfvQm5IoTQ1mT-tAV49LDkXAHZl317M1-D7eZw3N8o2ExKWTgg6oMAXOFVnkApIqnb7TZHekwSw8pWQxpJV2EKI8EQKQbQXJaSbjN8gB1n8b-ueWj8" />
@@ -206,6 +206,28 @@
                   class="bg-white/90 text-nordic px-3 py-1.5 rounded shadow-sm backdrop-blur-sm text-xs font-bold flex items-center gap-1 uppercase tracking-wide">
                   <span class="material-icons text-sm text-primary">map</span> Preview
                 </span>
+              </div>
+            </div>
+
+            <!-- Lat/Lng Coordinates -->
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label for="latitude"
+                  class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 flex items-center gap-1">
+                  <span class="material-icons text-xs text-primary">my_location</span> Latitude
+                </label>
+                <input type="number" id="latitude" v-model="form.latitude" step="0.0000001"
+                  class="w-full px-3 py-2 rounded-md border border-gray-200 dark:border-primary/30 bg-white dark:bg-[#0f2420] text-nordic dark:text-white placeholder-gray-400 focus:ring-1 focus:ring-primary focus:border-primary transition-all text-xs"
+                  placeholder="e.g. 37.4419">
+              </div>
+              <div>
+                <label for="longitude"
+                  class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 flex items-center gap-1">
+                  <span class="material-icons text-xs text-primary">my_location</span> Longitude
+                </label>
+                <input type="number" id="longitude" v-model="form.longitude" step="0.0000001"
+                  class="w-full px-3 py-2 rounded-md border border-gray-200 dark:border-primary/30 bg-white dark:bg-[#0f2420] text-nordic dark:text-white placeholder-gray-400 focus:ring-1 focus:ring-primary focus:border-primary transition-all text-xs"
+                  placeholder="e.g. -122.143">
               </div>
             </div>
           </div>
@@ -379,6 +401,8 @@ const form = ref({
   description: '',
   area: '',
   featured: false,
+  latitude: null,
+  longitude: null,
   year_built: '',
   beds: 3,
   baths: 2,
@@ -545,6 +569,9 @@ const save = async () => {
     payload.price = Number(payload.price)
     if (payload.area) payload.area = Number(payload.area)
     if (payload.year_built) payload.year_built = Number(payload.year_built)
+    // Only include lat/lng when they have actual values (requires DB migration)
+    if (payload.latitude == null || payload.latitude === '') delete payload.latitude
+    if (payload.longitude == null || payload.longitude === '') delete payload.longitude
 
     emit('save', payload)
   } catch (error) {

@@ -11,6 +11,8 @@ export interface Property {
   images?: string[]
   description?: string
   amenities?: string[]
+  latitude?: number | null
+  longitude?: number | null
   agent?: {
     name: string
     avatar: string

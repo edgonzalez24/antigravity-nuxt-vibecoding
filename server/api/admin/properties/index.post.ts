@@ -27,8 +27,8 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, statusMessage: 'Bad Request: Missing body' })
   }
 
-  // Remove immutable fields just tracking safe practices
-  const { id, created_at, ...insertData } = body
+  // Remove non-column fields: immutable, relation joins, and pending migration fields
+  const { id, created_at, agent, property_types, latitude, longitude, ...insertData } = body
 
   // Sanitize NOT NULL numeric fields — convert null/empty to 0
   if (insertData.area === null || insertData.area === '' || insertData.area === undefined) {

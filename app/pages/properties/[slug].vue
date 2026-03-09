@@ -45,25 +45,25 @@
               <span class="material-icons text-mosque mb-2">square_foot</span>
               <span class="font-bold text-xl text-nordic-dark">{{ property.area }}</span>
               <span class="text-xs text-nordic-dark/60 uppercase tracking-wide">{{ $t('property_details.square_meters')
-              }}</span>
+                }}</span>
             </div>
             <div class="bg-background-light rounded-xl p-4 flex flex-col items-center justify-center text-center">
               <span class="material-icons text-mosque mb-2">king_bed</span>
               <span class="font-bold text-xl text-nordic-dark">{{ property.beds }}</span>
               <span class="text-xs text-nordic-dark/60 uppercase tracking-wide">{{ $t('property_details.bedrooms')
-              }}</span>
+                }}</span>
             </div>
             <div class="bg-background-light rounded-xl p-4 flex flex-col items-center justify-center text-center">
               <span class="material-icons text-mosque mb-2">shower</span>
               <span class="font-bold text-xl text-nordic-dark">{{ property.baths }}</span>
               <span class="text-xs text-nordic-dark/60 uppercase tracking-wide">{{ $t('property_details.bathrooms')
-              }}</span>
+                }}</span>
             </div>
             <div class="bg-background-light rounded-xl p-4 flex flex-col items-center justify-center text-center">
               <span class="material-icons text-mosque mb-2">directions_car</span>
               <span class="font-bold text-xl text-nordic-dark">2</span>
               <span class="text-xs text-nordic-dark/60 uppercase tracking-wide">{{ $t('property_details.garage')
-              }}</span>
+                }}</span>
             </div>
           </div>
         </section>
@@ -291,8 +291,10 @@ const initMap = async () => {
     const mapElement = document.getElementById('map')
     if (!mapElement) return
 
-    // Fake coordinates for demo based on location string or generic
-    const coords: [number, number] = [37.4419, -122.1430] // Palo Alto default
+    // Use stored coordinates if available, otherwise generic fallback
+    const lat = property.value?.latitude ?? 37.4419
+    const lng = property.value?.longitude ?? -122.1430
+    const coords: [number, number] = [Number(lat), Number(lng)]
 
     mapInstance = L.map('map', {
       zoomControl: false,
