@@ -180,7 +180,7 @@
       <!-- Result count -->
       <p v-if="totalProperties > 0" class="text-center text-sm text-nordic-dark/40 mt-4">
         {{ $t('home.property.showing') }} {{ (currentPage - 1) * PAGE_LIMIT + 1 }}–{{ Math.min(currentPage * PAGE_LIMIT,
-        totalProperties) }} {{ $t('home.property.of') }} {{
+          totalProperties) }} {{ $t('home.property.of') }} {{
           totalProperties }} {{ $t('home.property.properties') }}
       </p>
     </section>
@@ -190,6 +190,11 @@
 
 <script setup lang="ts">
 const { formatPrice } = useProperties()
+const { t } = useI18n()
+
+useHead({
+  title: computed(() => `LuxeEstate | ${t('home.hero.sanctuary')}`)
+})
 
 const PAGE_LIMIT = 8
 

@@ -37,6 +37,10 @@
 </template>
 
 <script setup>
+useHead({
+  title: 'Admin Dashboard | LuxeEstate'
+})
+
 definePageMeta({
   layout: 'admin',
   middleware: ['admin'],

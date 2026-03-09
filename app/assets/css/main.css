@@ -25,6 +25,9 @@
   --color-mosque: #006655;
   /* Compatibility with old theme */
   --color-touch-of-green: #D9ECC8;
+  --color-active-green: #D9ECC8;
+  --color-hint-green: #D9ECC8;
+  --color-card-white: #FFFFFF;
   /* Compatibility with old theme */
   --color-accent: #D9ECC8;
   /* Divider */

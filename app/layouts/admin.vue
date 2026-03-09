@@ -1,67 +1,79 @@
 <template>
-  <div class="min-h-screen bg-gray-50 flex">
-    <!-- Sidebar -->
-    <aside class="w-64 bg-white border-r border-gray-200 flex flex-col">
-      <div class="h-16 flex items-center px-6 border-b border-gray-200">
-        <NuxtLink to="/" class="text-xl font-bold text-gray-900 tracking-tight">Luxus <span
-            class="text-primary-600">Admin</span></NuxtLink>
-      </div>
-
-      <div class="flex-1 py-4 overflow-y-auto">
-        <nav class="px-4 space-y-1">
-          <NuxtLink to="/admin"
-            class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-            exact-active-class="bg-gray-100 text-gray-900">
-            <svg class="mr-3 flex-shrink-0 h-5 w-5 text-gray-400 group-hover:text-gray-500" fill="none"
-              viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-            </svg>
-            Dashboard
-          </NuxtLink>
-          <NuxtLink to="/admin/properties"
-            class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-            exact-active-class="bg-gray-100 text-gray-900">
-            <svg class="mr-3 flex-shrink-0 h-5 w-5 text-gray-400 group-hover:text-gray-500" fill="none"
-              viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-            </svg>
-            Properties
-          </NuxtLink>
-          <NuxtLink to="/admin/users"
-            class="flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-            exact-active-class="bg-gray-100 text-gray-900">
-            <svg class="mr-3 flex-shrink-0 h-5 w-5 text-gray-400 group-hover:text-gray-500" fill="none"
-              viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-            </svg>
-            Users & Roles
-          </NuxtLink>
-        </nav>
-      </div>
-
-      <div class="p-4 border-t border-gray-200">
-        <div class="flex items-center justify-between">
-          <span class="text-sm text-gray-600 truncate">{{ user?.email }}</span>
-          <button @click="logout" class="text-sm text-red-600 hover:text-red-800 focus:outline-none">
-            Logout
+  <div
+    class="bg-background-light dark:bg-background-dark font-display text-nordic dark:text-gray-100 min-h-screen flex flex-col">
+    <!-- Navbar -->
+    <nav class="bg-card-white border-b border-nordic/5 px-4 sm:px-6 lg:px-8">
+      <div class="max-w-7xl mx-auto flex items-center justify-between h-16">
+        <div class="flex items-center gap-12">
+          <div class="flex-shrink-0 flex items-center gap-2 cursor-pointer">
+            <span class="material-symbols-outlined text-primary text-2xl">apartment</span>
+            <span class="font-bold text-lg text-nordic tracking-tight">LuxeEstate</span>
+          </div>
+          <div class="hidden md:flex space-x-8">
+            <NuxtLink to="/admin"
+              class="px-1 py-2 text-sm font-medium transition-colors border-b-2 text-nordic/60 hover:text-primary border-transparent"
+              exact-active-class="text-primary border-primary">
+              Dashboard
+            </NuxtLink>
+            <NuxtLink to="/admin/properties"
+              class="px-1 py-2 text-sm font-medium transition-colors border-b-2 text-nordic/60 hover:text-primary border-transparent"
+              exact-active-class="text-primary border-primary">
+              Properties
+            </NuxtLink>
+            <NuxtLink to="/admin/users"
+              class="px-1 py-2 text-sm font-medium transition-colors border-b-2 text-nordic/60 hover:text-primary border-transparent"
+              exact-active-class="text-primary border-primary">
+              Users
+            </NuxtLink>
+          </div>
+        </div>
+        <div class="flex items-center gap-5">
+          <button class="text-nordic/60 hover:text-primary transition-colors">
+            <span class="material-symbols-outlined text-xl">search</span>
           </button>
+          <button class="text-nordic/60 hover:text-primary transition-colors relative">
+            <span class="material-symbols-outlined text-xl">notifications</span>
+            <span class="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-500 ring-2 ring-white"></span>
+          </button>
+
+          <div class="flex items-center gap-3 pl-4 border-l border-gray-200 dark:border-gray-700 ml-2">
+            <div class="flex flex-col items-end hidden sm:flex">
+              <span class="text-sm font-semibold text-nordic dark:text-white">{{ user?.user_metadata?.full_name ||
+                user?.email?.split('@')[0] || 'Admin' }}</span>
+              <button @click="logout" class="text-xs text-red-500 hover:text-red-700 dark:text-red-400">Logout</button>
+            </div>
+
+            <div
+              class="h-9 w-9 rounded-full bg-primary/10 flex items-center justify-center text-primary overflow-hidden ring-2 ring-white dark:ring-primary/20 cursor-pointer">
+              <img v-if="user?.user_metadata?.avatar_url" :src="user.user_metadata.avatar_url" alt="User profile"
+                class="h-full w-full object-cover" referrerpolicy="no-referrer" />
+              <span v-else
+                class="material-symbols-outlined items-center justify-center flex text-nordic/60 text-lg">person</span>
+            </div>
+          </div>
+
         </div>
       </div>
-    </aside>
+    </nav>
 
     <!-- Main Content -->
-    <main class="flex-1 overflow-y-auto w-full">
-      <div class="py-6 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        <slot />
-      </div>
+    <main class="flex-grow w-full">
+      <slot />
     </main>
+
+    <!-- Footer -->
+    <footer class="mt-auto border-t border-gray-200 dark:border-primary/20 bg-white dark:bg-[#152e2a]">
+      <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <p class="text-center text-sm text-gray-400 dark:text-gray-500">© 2026 LuxeEstate Property Management. All
+          rights reserved.</p>
+      </div>
+    </footer>
   </div>
 </template>
 
 <script setup>
+import { computed } from 'vue'
+
 const user = useSupabaseUser()
 const supabase = useSupabaseClient()
 const router = useRouter()
@@ -75,7 +87,11 @@ const logout = async () => {
 <style scoped>
 /* Scoped styles */
 .router-link-active {
-  background-color: #f3f4f6;
-  color: #111827;
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.dark .router-link-active {
+  color: var(--color-primary);
 }
 </style>
