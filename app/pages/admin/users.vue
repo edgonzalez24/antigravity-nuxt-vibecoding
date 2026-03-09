@@ -13,7 +13,7 @@
             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <span class="material-icons text-nordic/40 group-focus-within:text-primary text-xl">search</span>
             </div>
-            <input
+            <input v-model="searchQuery"
               class="block w-full pl-10 pr-3 py-2.5 border-none rounded-lg bg-white dark:bg-gray-800 text-nordic dark:text-white shadow-soft placeholder-nordic/30 focus:ring-2 focus:ring-primary focus:bg-white transition-all text-sm"
               placeholder="Search by name, email..." type="text" />
           </div>
@@ -40,7 +40,7 @@
         Loading users...
       </div>
 
-      <div v-else-if="users && users.length > 0" class="space-y-4">
+      <div v-else-if="filteredUsers && filteredUsers.length > 0" class="space-y-4">
         <div
           class="hidden md:grid grid-cols-12 gap-4 px-6 text-xs font-semibold uppercase tracking-wider text-nordic/50 mb-2">
           <div class="col-span-4">User Details</div>
@@ -49,7 +49,7 @@
           <div class="col-span-2 text-right">Actions</div>
         </div>
 
-        <div v-for="user in users" :key="user.id" :class="[
+        <div v-for="user in paginatedUsers" :key="user.id" :class="[
           'user-card group relative rounded-xl p-5 shadow-sm border border-transparent hover:shadow-soft flex flex-col md:grid md:grid-cols-12 gap-4 items-center',
           user.role === 'admin' ? 'bg-active-green dark:bg-primary/20' : 'bg-white dark:bg-gray-800 border-gray-100 dark:border-gray-700 hover:bg-active-green/50 dark:hover:bg-primary/10'
         ]">
@@ -116,12 +116,52 @@
       <div v-else class="p-8 text-center text-gray-500">
         No users found.
       </div>
+
+      <!-- Pagination Form -->
+      <div v-if="totalPages > 1"
+        class="mt-6 flex flex-col sm:flex-row items-center justify-between border-t border-gray-100 dark:border-primary/10 pt-4 gap-4">
+        <div>
+          <p class="text-sm text-gray-700 dark:text-gray-300">
+            Showing
+            <span class="font-medium">{{ (currentPage - 1) * itemsPerPage + 1 }}</span>
+            to
+            <span class="font-medium">{{ Math.min(currentPage * itemsPerPage, filteredUsers.length) }}</span>
+            of
+            <span class="font-medium">{{ filteredUsers.length }}</span>
+            users
+          </p>
+        </div>
+        <div>
+          <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+            <button @click="goToPage(currentPage - 1)" :disabled="currentPage === 1"
+              class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed">
+              <span class="sr-only">Previous</span>
+              <span class="material-icons text-sm">chevron_left</span>
+            </button>
+
+            <button v-for="page in totalPages" :key="page" @click="goToPage(page)" :class="[
+              page === currentPage
+                ? 'z-10 bg-primary/10 border-primary text-primary dark:bg-primary/20'
+                : 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-700',
+              'relative inline-flex items-center px-4 py-2 border text-sm font-medium transition-colors'
+            ]">
+              {{ page }}
+            </button>
+
+            <button @click="goToPage(currentPage + 1)" :disabled="currentPage === totalPages"
+              class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed">
+              <span class="sr-only">Next</span>
+              <span class="material-icons text-sm">chevron_right</span>
+            </button>
+          </nav>
+        </div>
+      </div>
     </main>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed, watch } from 'vue'
 
 useHead({
   title: 'User Directory | LuxeEstate'
@@ -139,6 +179,44 @@ const users = ref([])
 const pending = ref(true)
 const updating = ref(null)
 const notification = ref({ show: false, message: '', type: 'success' })
+
+// Pagination & Search
+const searchQuery = ref('')
+const currentPage = ref(1)
+const itemsPerPage = 5
+
+const filteredUsers = computed(() => {
+  let filtered = users.value
+
+  if (searchQuery.value) {
+    const query = searchQuery.value.toLowerCase()
+    filtered = filtered.filter(user => {
+      const name = user.raw_user_meta_data?.full_name || ''
+      const email = user.email || ''
+      return name.toLowerCase().includes(query) || email.toLowerCase().includes(query)
+    })
+  }
+
+  return filtered
+})
+
+const totalPages = computed(() => Math.ceil(filteredUsers.value.length / itemsPerPage))
+
+const paginatedUsers = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage
+  const end = start + itemsPerPage
+  return filteredUsers.value.slice(start, end)
+})
+
+watch(searchQuery, () => {
+  currentPage.value = 1
+})
+
+const goToPage = (page) => {
+  if (page >= 1 && page <= totalPages.value) {
+    currentPage.value = page
+  }
+}
 
 const fetchUsers = async () => {
   pending.value = true

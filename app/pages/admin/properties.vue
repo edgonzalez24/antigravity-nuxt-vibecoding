@@ -117,6 +117,47 @@
           </div>
         </div>
       </div>
+
+      <!-- Pagination -->
+      <div v-if="totalPages > 1"
+        class="px-6 py-4 flex flex-col sm:flex-row items-center justify-between border-t border-gray-100 dark:border-primary/10 gap-4">
+        <div>
+          <p class="text-sm text-gray-700 dark:text-gray-300">
+            Showing
+            <span class="font-medium">{{ (currentPage - 1) * itemsPerPage + 1 }}</span>
+            to
+            <span class="font-medium">{{ Math.min(currentPage * itemsPerPage, totalProperties) }}</span>
+            of
+            <span class="font-medium">{{ totalProperties }}</span>
+            results
+          </p>
+        </div>
+        <div>
+          <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+            <button @click="goToPage(currentPage - 1)" :disabled="currentPage === 1"
+              class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed">
+              <span class="sr-only">Previous</span>
+              <span class="material-icons text-sm">chevron_left</span>
+            </button>
+
+            <button v-for="page in totalPages" :key="page" @click="goToPage(page)" :class="[
+              page === currentPage
+                ? 'z-10 bg-primary/10 border-primary text-primary dark:bg-primary/20'
+                : 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 text-gray-500 hover:bg-gray-50 dark:hover:bg-gray-700',
+              'relative inline-flex items-center px-4 py-2 border text-sm font-medium transition-colors'
+            ]">
+              {{ page }}
+            </button>
+
+            <button @click="goToPage(currentPage + 1)" :disabled="currentPage === totalPages"
+              class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed">
+              <span class="sr-only">Next</span>
+              <span class="material-icons text-sm">chevron_right</span>
+            </button>
+          </nav>
+        </div>
+      </div>
+
     </div>
   </div>
 </template>
@@ -133,16 +174,41 @@ definePageMeta({
 
 const supabase = useSupabaseClient()
 
-const { data: properties, pending } = await useAsyncData('admin-properties', async () => {
-  const { data, error } = await supabase
+const currentPage = ref(1)
+const itemsPerPage = 5
+const totalProperties = ref(0)
+const totalPages = computed(() => Math.ceil(totalProperties.value / itemsPerPage))
+
+const fetchProperties = async () => {
+  const from = (currentPage.value - 1) * itemsPerPage
+  const to = from + itemsPerPage - 1
+
+  const { data, count, error } = await supabase
     .from('properties')
-    .select('id, title, location, price, price_suffix, status')
+    .select('id, title, location, price, price_suffix, status', { count: 'exact' })
     .order('created_at', { ascending: false })
+    .range(from, to)
 
   if (error) {
     console.error('Error fetching properties:', error)
-    return []
+    return { data: [], count: 0 }
   }
-  return data
-})
+  return { data, count }
+}
+
+const { data: result, pending, refresh } = await useAsyncData('admin-properties', fetchProperties)
+
+const properties = computed(() => result.value?.data || [])
+watch(() => result.value?.count, (newCount) => {
+  if (newCount !== undefined) {
+    totalProperties.value = newCount
+  }
+}, { immediate: true })
+
+const goToPage = (page) => {
+  if (page >= 1 && page <= totalPages.value) {
+    currentPage.value = page
+    refresh()
+  }
+}
 </script>
