@@ -11,10 +11,10 @@
           class="bg-white dark:bg-[#152e2a] border border-gray-200 dark:border-primary/30 text-nordic dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-primary/10 px-4 py-2.5 rounded-lg text-sm font-medium transition-colors shadow-sm inline-flex items-center gap-2">
           <span class="material-icons text-base">visibility</span> View Site
         </NuxtLink>
-        <button
+        <NuxtLink to="/admin/properties/create"
           class="bg-primary hover:bg-primary/90 text-white px-5 py-2.5 rounded-lg text-sm font-medium shadow-md shadow-primary/20 transition-all transform hover:-translate-y-0.5 inline-flex items-center gap-2">
           <span class="material-icons text-base">add</span> Add New Property
-        </button>
+        </NuxtLink>
       </div>
     </div>
 
@@ -61,7 +61,7 @@
           <div class="col-span-12 md:col-span-6 flex gap-4 items-center">
             <div class="relative h-20 w-28 flex-shrink-0 rounded-lg overflow-hidden bg-gray-200">
               <img
-                :src="`https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80&sig=${property.id}`"
+                :src="property.images?.[0] || `https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80&sig=${property.id}`"
                 alt="Property"
                 class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
             </div>
@@ -71,10 +71,9 @@
                 {{ property.title }}</h3>
               <p class="text-sm text-gray-500 dark:text-gray-400">{{ property.location }}</p>
               <div class="flex items-center gap-3 mt-1.5 text-xs text-gray-400 dark:text-gray-500">
-                <span class="flex items-center gap-1"><span class="material-icons text-[14px]">bed</span> 3 Beds</span>
+                <span class="flex items-center gap-1"><span class="material-icons text-[14px]">bed</span> {{ property.beds || 0 }} Beds</span>
                 <span class="w-1 h-1 rounded-full bg-gray-300"></span>
-                <span class="flex items-center gap-1"><span class="material-icons text-[14px]">bathtub</span> 2
-                  Baths</span>
+                <span class="flex items-center gap-1"><span class="material-icons text-[14px]">bathtub</span> {{ property.baths || 0 }} Baths</span>
               </div>
             </div>
           </div>
@@ -104,11 +103,11 @@
 
           <!-- Actions -->
           <div class="col-span-12 md:col-span-2 flex items-center justify-end gap-2">
-            <button
-              class="p-2 rounded-lg text-gray-400 hover:text-primary hover:bg-hint-green/30 transition-all tooltip-trigger"
+            <NuxtLink :to="`/admin/properties/${property.id}/edit`"
+              class="p-2 rounded-lg text-gray-400 hover:text-primary hover:bg-hint-green/30 transition-all tooltip-trigger flex items-center justify-center"
               title="Edit Property">
               <span class="material-icons text-xl">edit</span>
-            </button>
+            </NuxtLink>
             <button
               class="p-2 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all tooltip-trigger"
               title="Delete Property">
@@ -185,8 +184,9 @@ const fetchProperties = async () => {
 
   const { data, count, error } = await supabase
     .from('properties')
-    .select('id, title, location, price, price_suffix, status', { count: 'exact' })
+    .select('id, title, location, price, price_suffix, status, images, beds, baths', { count: 'exact' })
     .order('created_at', { ascending: false })
+    .order('id', { ascending: false })
     .range(from, to)
 
   if (error) {

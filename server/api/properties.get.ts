@@ -22,6 +22,7 @@ export default defineEventHandler(async (event) => {
     .from('properties')
     .select('*, property_types!inner(name)', { count: 'exact' })
     .order('created_at', { ascending: false }) // Sort by newest usually
+    .order('id', { ascending: false }) // Secondary sort to enforce stability for seeded data
 
   // Filter by featured flag if provided
   if (featuredParam === 'true') {

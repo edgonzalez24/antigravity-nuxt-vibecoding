@@ -9,8 +9,8 @@
         <!-- Image Gallery -->
         <div class="space-y-4">
           <div class="relative rounded-2xl overflow-hidden aspect-[16/9]">
-            <NuxtImg :src="property.images?.[0] || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9'"
-              :alt="property.title" class="w-full h-full object-cover" />
+            <NuxtImg :src="selectedImage || 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9'"
+              :alt="property.title" class="w-full h-full object-cover transition-all duration-500" />
             <div class="absolute top-4 left-4 flex gap-2">
               <span v-if="property.featured"
                 class="bg-mosque text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">{{
@@ -26,9 +26,13 @@
           </div>
 
           <div v-if="property.images && property.images.length > 1" class="grid grid-cols-4 gap-4">
-            <div v-for="(img, idx) in property.images.slice(1, 5)" :key="idx"
-              class="relative rounded-xl overflow-hidden aspect-[4/3]">
-              <NuxtImg :src="img" :alt="`${property.title} thumbnail ${idx + 2}`" class="w-full h-full object-cover" />
+            <div v-for="(img, idx) in property.images.slice(0, 8)" :key="idx" @click="selectedImage = img" :class="[
+              'relative rounded-xl overflow-hidden aspect-[4/3] cursor-pointer ring-2 transition-all duration-200',
+              selectedImage === img
+                ? 'ring-mosque opacity-100 scale-[1.02]'
+                : 'ring-transparent opacity-70 hover:opacity-100 hover:ring-gray-300'
+            ]">
+              <NuxtImg :src="img" :alt="`${property.title} thumbnail ${idx + 1}`" class="w-full h-full object-cover" />
             </div>
           </div>
         </div>
@@ -41,25 +45,25 @@
               <span class="material-icons text-mosque mb-2">square_foot</span>
               <span class="font-bold text-xl text-nordic-dark">{{ property.area }}</span>
               <span class="text-xs text-nordic-dark/60 uppercase tracking-wide">{{ $t('property_details.square_meters')
-                }}</span>
+              }}</span>
             </div>
             <div class="bg-background-light rounded-xl p-4 flex flex-col items-center justify-center text-center">
               <span class="material-icons text-mosque mb-2">king_bed</span>
               <span class="font-bold text-xl text-nordic-dark">{{ property.beds }}</span>
               <span class="text-xs text-nordic-dark/60 uppercase tracking-wide">{{ $t('property_details.bedrooms')
-                }}</span>
+              }}</span>
             </div>
             <div class="bg-background-light rounded-xl p-4 flex flex-col items-center justify-center text-center">
               <span class="material-icons text-mosque mb-2">shower</span>
               <span class="font-bold text-xl text-nordic-dark">{{ property.baths }}</span>
               <span class="text-xs text-nordic-dark/60 uppercase tracking-wide">{{ $t('property_details.bathrooms')
-                }}</span>
+              }}</span>
             </div>
             <div class="bg-background-light rounded-xl p-4 flex flex-col items-center justify-center text-center">
               <span class="material-icons text-mosque mb-2">directions_car</span>
               <span class="font-bold text-xl text-nordic-dark">2</span>
               <span class="text-xs text-nordic-dark/60 uppercase tracking-wide">{{ $t('property_details.garage')
-                }}</span>
+              }}</span>
             </div>
           </div>
         </section>
@@ -67,8 +71,8 @@
         <!-- About this home -->
         <section class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
           <h2 class="text-xl font-bold text-nordic-dark mb-4">{{ $t('property_details.about_title') }}</h2>
-          <div class="text-nordic-dark/80 text-sm leading-relaxed space-y-4">
-            <p v-if="property.description">{{ property.description }}</p>
+          <div class="text-nordic-dark/80 text-sm leading-relaxed space-y-3 prose-sm">
+            <div v-if="property.description" v-html="parsedDescription" class="description-content"></div>
             <p v-else>
               {{ $t('property_details.description_1', { location: property.location }) }}
               <br><br>
@@ -217,12 +221,47 @@ const defaultAmenities = computed(() => [
   t('property_details.default_amenities.wine_cellar')
 ])
 
+const parsedDescription = computed(() => {
+  if (!property.value?.description) return ''
+  let text = property.value.description
+  // Escape HTML entities to prevent XSS
+  text = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+  // Bold: **text**
+  text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+  // Italic: *text*
+  text = text.replace(/\*(.*?)\*/g, '<em>$1</em>')
+  // Bullet lines: lines that start with • or - at start of line
+  const lines = text.split('\n')
+  let inList = false
+  const result: string[] = []
+  for (const line of lines) {
+    const isBullet = /^[•\-]\s+/.test(line)
+    if (isBullet) {
+      if (!inList) { result.push('<ul class="list-disc list-inside space-y-1 my-2">'); inList = true }
+      result.push(`<li>${line.replace(/^[•\-]\s+/, '')}</li>`)
+    } else {
+      if (inList) { result.push('</ul>'); inList = false }
+      if (line.trim() !== '') result.push(`<p>${line}</p>`)
+    }
+  }
+  if (inList) result.push('</ul>')
+  return result.join('')
+})
+
 useSeoMeta({
   title: () => property.value ? `${property.value.title} | LuxeEstate` : 'Property | LuxeEstate',
   description: () => property.value?.description || 'View details for this amazing property.',
 })
 
 // Leaflet Map logic
+// Selected image for gallery
+const selectedImage = ref<string>(property.value?.images?.[0] || '')
+watch(property, (val) => {
+  if (val?.images?.[0] && !selectedImage.value) {
+    selectedImage.value = val.images[0]
+  }
+}, { immediate: true })
+
 const mapLoaded = ref(false)
 let mapInstance: any = null
 
