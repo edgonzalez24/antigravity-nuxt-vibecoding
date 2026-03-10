@@ -197,15 +197,19 @@
 
             <!-- Map Preview -->
             <div
-              class="relative h-48 w-full rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-primary/30 group mb-4">
-              <img alt="Map view of city streets"
-                class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-all duration-500"
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAS55FY7gfArnlTpNsdabJk9nBO5uQJgOwIsl8beO34JRZ9dMmjLoIkTuTUO72Y9L5tUmQqTReQWebUWadAWwLusGmRQiIict5sqY--yRaOxuYpTzfR4vv4RKh1ex6oxY64e0kbSeMudNO6pv-gG0WzVWs-pDfvQm5IoTQ1mT-tAV49LDkXAHZl317M1-D7eZw3N8o2ExKWTgg6oMAXOFVnkApIqnb7TZHekwSw8pWQxpJV2EKI8EQKQbQXJaSbjN8gB1n8b-ueWj8" />
-              <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <span
-                  class="bg-white/90 text-nordic px-3 py-1.5 rounded shadow-sm backdrop-blur-sm text-xs font-bold flex items-center gap-1 uppercase tracking-wide">
-                  <span class="material-icons text-sm text-primary">map</span> Preview
-                </span>
+              class="relative h-48 w-full rounded-lg overflow-hidden border border-gray-200 dark:border-primary/30 mb-4"
+              :class="hasCoordinates ? '' : 'bg-gray-100 dark:bg-gray-800'">
+              <!-- Leaflet map when coordinates are available -->
+              <ClientOnly>
+                <AdminLeafletMap v-if="hasCoordinates" :latitude="Number(form.latitude)"
+                  :longitude="Number(form.longitude)" class="w-full h-full" />
+              </ClientOnly>
+              <!-- Placeholder when no coordinates -->
+              <div v-if="!hasCoordinates"
+                class="absolute inset-0 flex flex-col items-center justify-center gap-2 pointer-events-none">
+                <span class="material-icons text-3xl text-gray-300 dark:text-gray-600">location_off</span>
+                <p class="text-xs text-gray-400 dark:text-gray-500 text-center font-medium">Enter coordinates
+                  below<br>to preview location</p>
               </div>
             </div>
 
@@ -374,7 +378,7 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted, nextTick } from 'vue'
+import { ref, watch, computed, onMounted, nextTick } from 'vue'
 
 const props = defineProps({
   initialData: {
@@ -432,6 +436,13 @@ const fetchTypes = async () => {
     form.value.property_type_id = propertyTypes.value[0].id
   }
 }
+
+const hasCoordinates = computed(() => {
+  const lat = form.value.latitude
+  const lng = form.value.longitude
+  return lat !== null && lat !== '' && lng !== null && lng !== '' &&
+    !isNaN(Number(lat)) && !isNaN(Number(lng))
+})
 
 onMounted(() => {
   fetchTypes()
