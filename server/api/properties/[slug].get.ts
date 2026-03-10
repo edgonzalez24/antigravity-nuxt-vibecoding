@@ -16,6 +16,7 @@ export default defineEventHandler(async (event) => {
     .from('properties')
     .select('*, property_types(name)')
     .eq('slug', slug)
+    .eq('is_active', true)
     .single()
 
   if (error) {

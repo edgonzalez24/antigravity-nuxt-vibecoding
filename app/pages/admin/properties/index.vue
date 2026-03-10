@@ -54,8 +54,10 @@
 
       <div v-else class="divide-y divide-gray-100 dark:divide-primary/10">
         <!-- List Item -->
-        <div v-for="property in properties" :key="property.id"
-          class="group grid grid-cols-1 md:grid-cols-12 gap-4 px-6 py-5 hover:bg-background-light dark:hover:bg-primary/5 transition-colors items-center">
+        <div v-for="property in properties" :key="property.id" :class="[
+          'group grid grid-cols-1 md:grid-cols-12 gap-4 px-6 py-5 hover:bg-background-light dark:hover:bg-primary/5 transition-colors items-center',
+          !property.is_active && 'opacity-50'
+        ]">
 
           <!-- Property Details -->
           <div class="col-span-12 md:col-span-6 flex gap-4 items-center">
@@ -71,9 +73,11 @@
                 {{ property.title }}</h3>
               <p class="text-sm text-gray-500 dark:text-gray-400">{{ property.location }}</p>
               <div class="flex items-center gap-3 mt-1.5 text-xs text-gray-400 dark:text-gray-500">
-                <span class="flex items-center gap-1"><span class="material-icons text-[14px]">bed</span> {{ property.beds || 0 }} Beds</span>
+                <span class="flex items-center gap-1"><span class="material-icons text-[14px]">bed</span> {{
+                  property.beds || 0 }} Beds</span>
                 <span class="w-1 h-1 rounded-full bg-gray-300"></span>
-                <span class="flex items-center gap-1"><span class="material-icons text-[14px]">bathtub</span> {{ property.baths || 0 }} Baths</span>
+                <span class="flex items-center gap-1"><span class="material-icons text-[14px]">bathtub</span> {{
+                  property.baths || 0 }} Baths</span>
               </div>
             </div>
           </div>
@@ -86,9 +90,9 @@
           </div>
 
           <!-- Status -->
-          <div class="col-span-6 md:col-span-2">
+          <div class="col-span-6 md:col-span-2 flex flex-col gap-1">
             <span :class="[
-              'inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border',
+              'inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border w-fit',
               property.status === 'sale'
                 ? 'bg-hint-green text-primary border-primary/10 dark:bg-primary/20 dark:text-green-300'
                 : 'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-300'
@@ -99,6 +103,19 @@
               ]"></span>
               {{ property.status === 'sale' ? 'For Sale' : 'For Rent' }}
             </span>
+            <!-- Active / Inactive badge -->
+            <span :class="[
+              'inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium border w-fit',
+              property.is_active
+                ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-900/30 dark:text-emerald-300'
+                : 'bg-gray-100 text-gray-500 border-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-700'
+            ]">
+              <span :class="[
+                'w-1.5 h-1.5 rounded-full mr-1.5',
+                property.is_active ? 'bg-emerald-500' : 'bg-gray-400'
+              ]"></span>
+              {{ property.is_active ? 'Active' : 'Inactive' }}
+            </span>
           </div>
 
           <!-- Actions -->
@@ -108,10 +125,14 @@
               title="Edit Property">
               <span class="material-icons text-xl">edit</span>
             </NuxtLink>
-            <button
-              class="p-2 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all tooltip-trigger"
-              title="Delete Property">
-              <span class="material-icons text-xl">delete_outline</span>
+            <button @click="toggleActive(property)" :disabled="togglingId === property.id"
+              :title="property.is_active ? 'Deactivate Property' : 'Activate Property'" :class="[
+                'p-2 rounded-lg transition-all tooltip-trigger disabled:opacity-50 disabled:cursor-not-allowed',
+                property.is_active
+                  ? 'text-gray-400 hover:text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-900/20'
+                  : 'text-gray-400 hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20'
+              ]">
+              <span class="material-icons text-xl">{{ property.is_active ? 'visibility_off' : 'visibility' }}</span>
             </button>
           </div>
         </div>
@@ -159,6 +180,79 @@
 
     </div>
   </div>
+
+  <!-- Custom Confirm Modal -->
+  <Teleport to="body">
+    <Transition enter-active-class="transition duration-200 ease-out" enter-from-class="opacity-0"
+      enter-to-class="opacity-100" leave-active-class="transition duration-150 ease-in" leave-from-class="opacity-100"
+      leave-to-class="opacity-0">
+      <div v-if="confirmModal.visible" class="fixed inset-0 z-50 flex items-center justify-center p-4"
+        @click.self="confirmModal.resolve(false)">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+
+        <!-- Dialog -->
+        <Transition enter-active-class="transition duration-200 ease-out"
+          enter-from-class="opacity-0 scale-95 translate-y-2" enter-to-class="opacity-100 scale-100 translate-y-0"
+          leave-active-class="transition duration-150 ease-in" leave-from-class="opacity-100 scale-100"
+          leave-to-class="opacity-0 scale-95">
+          <div v-if="confirmModal.visible"
+            class="relative w-full max-w-md bg-white dark:bg-[#152e2a] rounded-2xl shadow-2xl border border-gray-100 dark:border-primary/20 overflow-hidden">
+
+            <!-- Top accent bar -->
+            <div :class="confirmModal.danger ? 'bg-amber-500' : 'bg-emerald-500'" class="h-1 w-full"></div>
+
+            <div class="p-6">
+              <!-- Icon -->
+              <div class="flex justify-center mb-4">
+                <div :class="confirmModal.danger
+                  ? 'bg-amber-100 dark:bg-amber-900/30 text-amber-600'
+                  : 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600'"
+                  class="w-14 h-14 rounded-full flex items-center justify-center">
+                  <span class="material-icons text-3xl">{{ confirmModal.danger ? 'visibility_off' : 'visibility'
+                  }}</span>
+                </div>
+              </div>
+
+              <!-- Title -->
+              <h3 class="text-lg font-bold text-center text-nordic dark:text-white mb-1">
+                {{ confirmModal.title }}
+              </h3>
+
+              <!-- Body -->
+              <p class="text-sm text-gray-500 dark:text-gray-400 text-center mb-6">
+                {{ confirmModal.message }}
+              </p>
+
+              <!-- Property name pill -->
+              <div
+                class="bg-gray-50 dark:bg-[#0f2420] border border-gray-200 dark:border-primary/20 rounded-lg px-4 py-2.5 mb-6 flex items-center gap-2">
+                <span class="material-icons text-sm text-gray-400">apartment</span>
+                <span class="text-sm font-semibold text-nordic dark:text-white truncate">{{ confirmModal.propertyName
+                }}</span>
+              </div>
+
+              <!-- Actions -->
+              <div class="flex gap-3">
+                <button @click="confirmModal.resolve(false)"
+                  class="flex-1 py-2.5 rounded-xl border border-gray-200 dark:border-primary/30 bg-white dark:bg-transparent text-gray-600 dark:text-gray-300 font-medium text-sm hover:bg-gray-50 dark:hover:bg-primary/10 transition-colors">
+                  Cancelar
+                </button>
+                <button @click="confirmModal.resolve(true)" :class="confirmModal.danger
+                  ? 'bg-amber-500 hover:bg-amber-600 shadow-amber-200 dark:shadow-amber-900/40'
+                  : 'bg-emerald-500 hover:bg-emerald-600 shadow-emerald-200 dark:shadow-emerald-900/40'"
+                  class="flex-1 py-2.5 rounded-xl text-white font-medium text-sm shadow-md transition-all hover:-translate-y-0.5 flex items-center justify-center gap-1.5">
+                  <span class="material-icons text-sm">{{ confirmModal.danger ? 'visibility_off' : 'visibility'
+                  }}</span>
+                  {{ confirmModal.confirmLabel }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </Transition>
+      </div>
+    </Transition>
+  </Teleport>
 </template>
 
 <script setup>
@@ -178,13 +272,15 @@ const itemsPerPage = 5
 const totalProperties = ref(0)
 const totalPages = computed(() => Math.ceil(totalProperties.value / itemsPerPage))
 
+const togglingId = ref(null)
+
 const fetchProperties = async () => {
   const from = (currentPage.value - 1) * itemsPerPage
   const to = from + itemsPerPage - 1
 
   const { data, count, error } = await supabase
     .from('properties')
-    .select('id, title, location, price, price_suffix, status, images, beds, baths', { count: 'exact' })
+    .select('id, title, location, price, price_suffix, status, images, beds, baths, is_active', { count: 'exact' })
     .order('created_at', { ascending: false })
     .order('id', { ascending: false })
     .range(from, to)
@@ -194,6 +290,59 @@ const fetchProperties = async () => {
     return { data: [], count: 0 }
   }
   return { data, count }
+}
+
+const confirmModal = reactive({
+  visible: false,
+  title: '',
+  message: '',
+  confirmLabel: 'Confirmar',
+  propertyName: '',
+  danger: false,
+  resolve: (_) => { },
+})
+
+const openConfirm = ({ title, message, confirmLabel, propertyName, danger }) => {
+  return new Promise((resolve) => {
+    confirmModal.visible = true
+    confirmModal.title = title
+    confirmModal.message = message
+    confirmModal.confirmLabel = confirmLabel
+    confirmModal.propertyName = propertyName
+    confirmModal.danger = danger
+    confirmModal.resolve = (result) => {
+      confirmModal.visible = false
+      resolve(result)
+    }
+  })
+}
+
+const toggleActive = async (property) => {
+  const willDeactivate = property.is_active
+  if (willDeactivate) {
+    const ok = await openConfirm({
+      title: 'Desactivar propiedad',
+      message: 'Esta propiedad dejará de aparecer en el sitio público. Podrás reactivarla en cualquier momento.',
+      confirmLabel: 'Desactivar',
+      propertyName: property.title,
+      danger: true,
+    })
+    if (!ok) return
+  }
+
+  togglingId.value = property.id
+  try {
+    await $fetch(`/api/admin/properties/${property.id}`, {
+      method: 'PATCH',
+      body: { is_active: !property.is_active },
+    })
+    await refresh()
+  } catch (err) {
+    console.error('Error toggling property active state:', err)
+    alert('Error al cambiar el estado de la propiedad.')
+  } finally {
+    togglingId.value = null
+  }
 }
 
 const { data: result, pending, refresh } = await useAsyncData('admin-properties', fetchProperties)

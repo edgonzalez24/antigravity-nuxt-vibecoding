@@ -354,6 +354,25 @@
             </button>
           </div>
 
+          <!-- Active / Inactive Toggle -->
+          <div class="flex items-center justify-between p-3 rounded-lg"
+            :class="form.is_active ? 'bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800' : 'bg-gray-50 dark:bg-[#0f2420] border border-gray-200 dark:border-primary/20'">
+            <div class="flex items-center gap-2">
+              <span class="material-icons text-sm" :class="form.is_active ? 'text-emerald-600' : 'text-gray-400'">{{
+                form.is_active ? 'visibility' : 'visibility_off' }}</span>
+              <div>
+                <p class="text-sm font-semibold text-nordic dark:text-white">{{ form.is_active ? 'Active' : 'Inactive' }}</p>
+                <p class="text-xs text-gray-400">{{ form.is_active ? 'Visible on public site' : 'Hidden from public site' }}</p>
+              </div>
+            </div>
+            <button type="button" @click="form.is_active = !form.is_active"
+              :class="form.is_active ? 'bg-emerald-500' : 'bg-gray-300 dark:bg-gray-600'"
+              class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none">
+              <span :class="form.is_active ? 'translate-x-6' : 'translate-x-1'"
+                class="inline-block h-4 w-4 transform rounded-full bg-white shadow-sm transition-transform duration-200" />
+            </button>
+          </div>
+
         </div>
       </div>
     </div>
@@ -405,6 +424,7 @@ const form = ref({
   description: '',
   area: '',
   featured: false,
+  is_active: true,
   latitude: null,
   longitude: null,
   year_built: '',

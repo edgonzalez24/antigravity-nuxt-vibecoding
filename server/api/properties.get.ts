@@ -21,6 +21,7 @@ export default defineEventHandler(async (event) => {
   let dbQuery = client
     .from('properties')
     .select('*, property_types!inner(name)', { count: 'exact' })
+    .eq('is_active', true)
     .order('created_at', { ascending: false }) // Sort by newest usually
     .order('id', { ascending: false }) // Secondary sort to enforce stability for seeded data
 
