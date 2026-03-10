@@ -33,7 +33,7 @@ export default defineEventHandler(async (event) => {
   }
 
   if (searchParam) {
-    dbQuery = dbQuery.or(`location.ilike.%${searchParam}%,title.ilike.%${searchParam}%`)
+    dbQuery = dbQuery.ilike('title', `%${searchParam}%`)
   }
 
   if (typeParam) {

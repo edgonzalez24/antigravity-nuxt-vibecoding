@@ -228,10 +228,21 @@ const hasActiveSearchOrFilter = computed(() => {
   return hasSearch || hasFilters
 })
 
+let debounceTimer: ReturnType<typeof setTimeout> | null = null
+
 const triggerSearch = () => {
+  if (debounceTimer) clearTimeout(debounceTimer)
   activeSearchQuery.value = searchQuery.value
-  currentPage.value = 1 // reset to first page
+  currentPage.value = 1
 }
+
+watch(searchQuery, (val) => {
+  if (debounceTimer) clearTimeout(debounceTimer)
+  debounceTimer = setTimeout(() => {
+    activeSearchQuery.value = val
+    currentPage.value = 1
+  }, 400)
+})
 
 const setQuickType = (type: string) => {
   const newType = type === 'All' ? undefined : type
@@ -260,9 +271,13 @@ const { data: propertiesData, pending: propertiesPending } = await useAsyncData(
   'new-properties',
   () => {
     const queryParams: any = {
-      featured: 'false',
       page: currentPage.value,
       limit: PAGE_LIMIT
+    }
+
+    // Only filter by featured when there's no active search — so search includes all properties
+    if (!activeSearchQuery.value) {
+      queryParams.featured = 'false'
     }
 
     if (activeSearchQuery.value) queryParams.search = activeSearchQuery.value
