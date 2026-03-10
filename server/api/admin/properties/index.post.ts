@@ -27,8 +27,8 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, statusMessage: 'Bad Request: Missing body' })
   }
 
-  // Remove non-column fields: immutable, relation joins, and pending migration fields
-  const { id, created_at, agent, property_types, latitude, longitude, ...insertData } = body
+  // Remove non-column fields: immutable, relation joins
+  const { id, created_at, agent, property_types, ...insertData } = body
 
   // Sanitize NOT NULL numeric fields — convert null/empty to 0
   if (insertData.area === null || insertData.area === '' || insertData.area === undefined) {
@@ -42,6 +42,9 @@ export default defineEventHandler(async (event) => {
   if (insertData.parking === '') insertData.parking = null
   if (insertData.beds === '') insertData.beds = 0
   if (insertData.baths === '') insertData.baths = 0
+  // Sanitize lat/lng — keep null if empty
+  if (insertData.latitude === '' || insertData.latitude === undefined) insertData.latitude = null
+  if (insertData.longitude === '' || insertData.longitude === undefined) insertData.longitude = null
 
   const { data, error } = await client
     .from('properties')

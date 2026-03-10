@@ -569,9 +569,9 @@ const save = async () => {
     payload.price = Number(payload.price)
     if (payload.area) payload.area = Number(payload.area)
     if (payload.year_built) payload.year_built = Number(payload.year_built)
-    // Only include lat/lng when they have actual values (requires DB migration)
-    if (payload.latitude == null || payload.latitude === '') delete payload.latitude
-    if (payload.longitude == null || payload.longitude === '') delete payload.longitude
+    // Convert lat/lng to number or null
+    payload.latitude = (payload.latitude !== null && payload.latitude !== '') ? Number(payload.latitude) : null
+    payload.longitude = (payload.longitude !== null && payload.longitude !== '') ? Number(payload.longitude) : null
 
     emit('save', payload)
   } catch (error) {

@@ -105,9 +105,8 @@ const onSave = async (payload) => {
     if (payload.area === "") payload.area = null;
     if (payload.year_built === "") payload.year_built = null;
 
-    // Destructure to remove fields we don't want to update
-    // latitude/longitude excluded until DB migration (ALTER TABLE adds these columns)
-    const { id, created_at, latitude, longitude, ...updateData } = payload
+    // Only strip truly immutable fields; lat/lng are valid columns now
+    const { id, created_at, ...updateData } = payload
 
     await $fetch(`/api/admin/properties/${route.params.id}`, {
       method: 'PUT',

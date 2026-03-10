@@ -29,7 +29,7 @@ export default defineEventHandler(async (event) => {
   }
 
   // Remove immutable / relation fields that are NOT direct columns in `properties`
-  const { id, created_at, agent, property_types, latitude, longitude, ...updateData } = body
+  const { id, created_at, agent, property_types, ...updateData } = body
 
   // Sanitize NOT NULL numeric fields
   if (updateData.area === null || updateData.area === '' || updateData.area === undefined) updateData.area = 0
@@ -38,14 +38,9 @@ export default defineEventHandler(async (event) => {
   if (updateData.parking === '') updateData.parking = null
   if (updateData.beds === '') updateData.beds = 0
   if (updateData.baths === '') updateData.baths = 0
-
-  // Strip lat/lng — only include when they have actual numeric values
-  // (type="number" v-model sends "" when empty, which != null but still invalid)
-  if (updateData.latitude == null || updateData.latitude === '') delete updateData.latitude
-  if (updateData.longitude == null || updateData.longitude === '') delete updateData.longitude
-
-  console.log('[PUT /api/admin/properties] body keys:', Object.keys(body))
-  console.log('[PUT /api/admin/properties] updateData keys:', Object.keys(updateData))
+  // Sanitize lat/lng — keep null if empty
+  if (updateData.latitude === '' || updateData.latitude === undefined) updateData.latitude = null
+  if (updateData.longitude === '' || updateData.longitude === undefined) updateData.longitude = null
 
   const { data, error } = await client
     .from('properties')
